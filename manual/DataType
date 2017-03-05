@@ -46,6 +46,9 @@ var_dump(17/2);     输出float 8.5
 var_dump((int)12.9);    输出12
 var_dump((int)-12.9);   输出-12
 
+$a = TRUE;
+echo ($a++).$a;  // 因为bool类型不能自加输出11
+
 可以将ip地址在数据库中存储为int类型，这样会读写更快
 var_dump($_SERVER['REMOTE_ADDR']);              //输出192.168.10.1
 $ipArr = explode('.', $_SERVER['REMOTE_ADDR']);
@@ -237,4 +240,17 @@ var_dump((object)'srtToObj');//object(stdClass)[2]
                                  public 'scalar' => string 'srtToObj' (length=8)
 
 
+type:null
+特殊的NULL值表示一个变量没有值，NULL唯一的可能值就是null
+下列情况下变量被认为是null：
+被赋值为null
+尚未被赋值
+被unset()
+
+note:
+空数组和null在==运算符时返回true，在===运算符和is_null()下返回false
+$a=array();
+var_dump($a==null);//true
+var_dump($a===null);//false
+var_dump(is_null($a));//false
 
