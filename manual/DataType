@@ -177,3 +177,64 @@ type:array数组
 定义方法：
 1.array(key=>value,......)
 2.[key=>value]
+key可以是整型或者字符串，value可以是任何类型
+
+note：
+key会有如下的强制转换：
+包含有合法的整型值的字符串会被转换为整型。例如键名"8"，实际会被存储为8，但是"08"则不会强制转换，因为其不是一个合法的十进制数
+var_dump(array('4'=>4)); //4 => int 4
+var_dump(array('04'=>4));//'04' => int 4
+var_dump(array('4.3'=>4));//'4.3' => int 4
+
+浮点数也会被转化为整型，意味着小数部分会被舍去，如键名8.7实际会存储为8
+var_dump(array(8.7 => 4));//  8 => int 4
+
+布尔值也会被转换为整型。即键名true实际存储为1，而键名false实际存储为0
+var_dump(array(true => 1, false => 0));//array (size=2)1 => int 1  0 => int 0
+
+Null会被转换为空字符串，即键名null
+var_dump([null=>'asd']);//'' => string 'asd'
+
+key是可选项，如果未指定，PHP将自动使用之前用过的最大整型键名加上1作为新的键名
+array("foo", "bar", 11 => "hello", "world");//0 =>'foo' 1 =>'bar' 11 => 'hello'  12 => 'world'
+
+unset用来删除一个数组中的某个键，但是不会重建索引。如果需要删除后重建索引，需要array_values()函数
+unset($a[12]);
+print_r($a);//Array ( [0] => foo [1] => bar [11] => hello )
+$a[] = 'new';
+print_r($a);//Array ( [0] => foo [1] => bar [11] => hello [13] => new )
+$b=array_values($a);
+print_r($b);//Array ( [0] => foo [1] => bar [2] => hello [3] => new )
+
+
+type：object对象
+对象初始化：要创建一个新的对象object，使用new实例化一个类
+class foo
+{
+    function do_foo()
+    {
+        echo "Doing foo.";
+    }
+}
+
+$bar = new foo;
+$bar->do_foo();//Doing foo.
+
+将一个对象转换成对象，将不会发生变化，如果其他任何类型的值转换为对象，将会创建一个内置stdClass的类，
+如果该值为null，新的实例为空。
+数组转换，将使键名转换为属性名并具有相应的值。
+对于任何其他的值，名为scalar的成员变量将包含该变量。
+var_dump((object)null);//object(stdClass)[2]
+var_dump((object)array('first'=>2, 'second'=>4, 'last' => 3));//object(stdClass)[2]
+                                                                public 'first' => int 2
+                                                                public 'second' => int 4
+                                                                public 'last' => int 3
+                                                                可用来对对象的属性进行赋值
+$obj = (object)array(2, 4, 'new' => 3);
+var_dump($obj->0);//会报错
+
+var_dump((object)'srtToObj');//object(stdClass)[2]
+                                 public 'scalar' => string 'srtToObj' (length=8)
+
+
+
