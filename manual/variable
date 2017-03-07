@@ -1,0 +1,84 @@
+变量：
+变量的命名规则为：^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*//\x7f-\xff表示中文编码
+$this是个特殊的变量不能被赋值
+除了直接赋值之外可以使用引用对变量进行赋值，改动新的变量会影响原始变量。
+$foo = 'bob';
+$bar =& $foo;
+echo $bar;//bob
+$foo = 'bib';
+echo $bar;//bib
+$bar = "bab";
+echo $foo;//bab
+
+预定义变量
+超全局变量：在全部作用域始终可用的内置变量，在一个脚本中的全部作用于都可用不用定义global
+$GLOBALS引用全局作用域中可用的全部变量，一个包含了全部变量的全局组合数组，变量的名字就是数组的键
+不建议使用$GLOBALS，而使用引用传递，避免作用域过大
+function test() {
+    $foo = "local variable";
+
+    echo '$foo in global scope: ' . $GLOBALS["foo"] . "\n";
+    echo '$foo in current scope: ' . $foo . "\n";
+}
+
+$foo = "Example content";
+test();//$foo in global scope: Example content $foo in current scope: local variable
+
+$_SERVER包含头信息，路径，以及脚本位置等信息
+var_dump($_SERVER);
+  'USER' => string 'vagrant' (length = 7)
+  'HOME' => string '/home/vagrant' (length = 13)
+  'FCGI_ROLE' => string 'RESPONDER' (length = 9)
+  'QUERY_STRING' => string '' (length = 0)
+  'REQUEST_METHOD' => string 'GET' (length = 3)
+  'CONTENT_TYPE' => string '' (length = 0)
+  'CONTENT_LENGTH' => string '' (length = 0)
+  'SCRIPT_FILENAME' => string '/home/vagrant/Code/phpStudy/manual/TEST.php' (length = 43)
+  'SCRIPT_NAME' => string '/TEST.php' (length = 9)
+  'REQUEST_URI' => string '/TEST.php' (length = 9)
+  'DOCUMENT_URI' => string '/TEST.php' (length = 9)
+  'DOCUMENT_ROOT' => string '/home/vagrant/Code/phpStudy/manual' (length = 34)
+  'SERVER_PROTOCOL' => string 'HTTP/1.1' (length = 8)
+  'GATEWAY_INTERFACE' => string 'CGI/1.1' (length = 7)
+  'SERVER_SOFTWARE' => string 'nginx/1.8.0' (length = 11)
+  'REMOTE_ADDR' => string '192.168.10.1' (length = 12)
+  'REMOTE_PORT' => string '63336' (length = 5)
+  'SERVER_ADDR' => string '192.168.10.10' (length = 13)
+  'SERVER_PORT' => string '80' (length = 2)
+  'SERVER_NAME' => string 'manual.app' (length = 10)
+  'REDIRECT_STATUS' => string '200' (length = 3)
+  'HTTP_HOST' => string 'manual.app' (length = 10)
+  'HTTP_CONNECTION' => string 'keep-alive' (length = 10)
+  'HTTP_CACHE_CONTROL' => string 'max-age=0' (length = 9)
+  'HTTP_UPGRADE_INSECURE_REQUESTS' => string '1' (length = 1)
+  'HTTP_USER_AGENT' => string 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.95 Safari/537.36' (length = 120)
+  'HTTP_ACCEPT' => string 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8' (length = 74)
+  'HTTP_ACCEPT_ENCODING' => string 'gzip, deflate, sdch' (length = 19)
+  'HTTP_ACCEPT_LANGUAGE' => string 'zh-CN,zh;q=0.8' (length = 14)
+  'PHP_SELF' => string '/TEST.php' (length = 9)
+  'REQUEST_TIME_FLOAT' => float 1488172497.2781
+  'REQUEST_TIME' => int 1488172497
+
+
+$_GET:通过url参数传递给当前脚本的变量数组
+$_POST:通过http post传递给当前脚本的变量数组，通过name属性进行查找
+$_FILES:通过http post上传的文件数组
+$_REQUSET:默认情况下包含了 $_GET，$_POST 和 $_COOKIE 的数组
+          这个数组的项目和依赖顺序决定于php.ini的variables_order//不建议使用
+          在脚本运行时，改变$_GET，$_POST的值，$_REQUSET不会变
+    $_GET['foo'] = 'a';
+    $_POST['bar'] = 'b';
+    var_dump($_GET); //   'foo' => string 'a' (length=1)
+    var_dump($_POST); //   'bar' => string 'b' (length=1)
+    var_dump($_REQUEST); // empty
+$_SESSION:可用session变量的数组
+$_ENV:通过环境方式传递给脚本的数组
+$_COOKIE通过http cookie传递给脚本的数组
+$argv传递给脚本的参数数组
+
+
+
+
+
+
+
