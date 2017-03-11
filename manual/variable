@@ -76,9 +76,139 @@ $_ENV:通过环境方式传递给脚本的数组
 $_COOKIE通过http cookie传递给脚本的数组
 $argv传递给脚本的参数数组
 
+变量范围
+global关键字:
+$a=1;$b=2;
+function test(){
+    global $a,$b;
+    $b=$a+$b;
+}
+test();
+echo $b;
+将会输出3，在函数中声明全局变量$a和$b之后，对任一变量的引用都会指向其全局版本。
+可以利用$GLOBAL替换global，上述脚本可以写为
+$a=1;$b=2;
+function test(){
+    $GLOBALS['b']=$GLOBALS['a']+$GLOBALS['b'];
+}
+test();
+echo $b;
+
+在子函数中声明的global变量对父函数的变量不起作用。
+function father(){
+    $var=9;
+    function child(){
+        global $var;
+        echo $var;
+    }
+    child();
+}
+father();//输出为空
+
+function father(){
+    global $var;
+    $var=9;
+    function child(){
+        global $var;
+        echo $var;
+    }
+    child();
+}
+father();输出9
+
+使用static静态变量：
+function test(){
+    static $a=0;
+    echo $a;
+    $a++;
+}
+test();//0
+test();//1
+test();//2
+$a在第一次调用test()时初始化，之后每次调用test()，每次输出$a，然后加1。
+
+静态变量不会随着继承保持，静态变量会为父类和子类生成两份
+class A
+{
+    function Z(){
+        static $a=0;
+        printf('class name:%s,$a:%d</br>',get_class($this),$a);
+        $a++;
+    }
+}
+class B extends A{}
+$a=new A;
+$b=new B;
+$a->Z();//class name:A,$a:0
+$a->Z();//class name:A,$a:1
+$b->Z();//class name:B,$a:0
+$a->Z();//class name:A,$a:2
+
+静态变量和递归函数：
+静态变量也提供了一种处理递归函数的方法。递归函数调用自身
+function test(){
+    static $a=0;
+    echo $a;
+    $a++;
+    if($a<10){
+        test();
+    }
+}
+test();//输出1到9
+
+静态声明是在编译时候进行解析的，如果声明时用表达式的结果对其赋值会导致解析错误。
+static $a = 0;//正确
+static $b = $a;//错误
+static $c = sqrt(12);//错误
+可以先声明，后赋值，如
+static $b;
+$b=$a;
+static $c;
+$c = sqrt(12);
+
+for($j=0; $j<3; $j++)
+{
+    if($j == 1)
+        $a = 4;
+}
+echo $a;
+循环内if模块内声明的变量在模块外也可以使用
 
 
+可变变量：一个变量名可以动态的设置和使用。一个普通的变量通过声明来设置
+$a='hello';
+$$a='world';
+echo $$a;   //world
+echo $hello;//world
+
+将可变变量用作数组时：[]运算符先于$
+class foo {
+    var $bar = 'I am bar.';
+    var $arr = array('I am A.', 'I am B.', 'I am C.');
+    var $r   = 'I am r.';
+}
+
+$foo = new foo();
+$bar = 'bar';
+$baz = array('foo', 'bar', 'baz', 'quux');
+echo $foo->$bar . "\n";//I am bar.
+echo $foo->$baz[1] . "\n";//I am bar.
+
+$start = 'b';
+$end   = 'ar';
+echo $foo->{$start . $end} . "\n";//I am bar.
+
+$arr = 'arr';
+echo $foo->$arr[1] . "\n";//I am r.
+echo $foo->{$arr}[1] . "\n";//I am B.
 
 
+$a = 'variable-name';
+$$a = 'hello';
+echo $variable-name . ' ' . $$a; // 输出0 hello,variable-name不符合命名规范
 
+$foo = 'info';
+{'php'."$foo"}(); // Parse error函数名的部分不能拆开
+$func = "php$foo";
+$func(); //可以这样
 
