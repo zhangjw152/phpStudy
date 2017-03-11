@@ -1,144 +1,132 @@
-type: bool boolean布尔类型
+php常用的数据类型有：布尔类型，整型，浮点型，字符串，数组，对象，NULL
+
+一.type: bool boolean布尔类型
 当转换为 boolean 时，以下值被认为是 FALSE：
+1.布尔值 FALSE 本身；
+2.整型值 0（零）；
+3.浮点型值 0.0（零）；
+4.空字符串，以及字符串 "0"；
+5.不包括任何元素的数组；
+6.不包括任何成员变量的对象（仅 PHP 4.0 适用）；
+7.特殊类型 NULL（包括尚未赋值的变量）；
+8.从空标记生成的 SimpleXML 对象。
 
-布尔值 FALSE 本身
-整型值 0（零）
-浮点型值 0.0（零）
-空字符串，以及字符串 "0"
-不包括任何元素的数组
-不包括任何成员变量的对象（仅 PHP 4.0 适用）
-特殊类型 NULL（包括尚未赋值的变量）
-从空标记生成的 SimpleXML 对象
+注意事项:
+1.var_dump((bool) "0") ;                 //之前以为是true，字符串0返回false
+   var_dump((bool) "0.0") ;              //返回true
 
-note:
-var_dump((bool) "0") ;         //之前以为是true，字符串0返回false
-var_dump((bool) "0.0") ;       //返回true
+2.var_dump(0 == "sdade");
+   var_dump("sdade" == 0);            //两个都是true，非数字字符串转化为整型为0
+   var_dump("sdade" == (string)0);//返回false
 
-var_dump(0 == "sdade");
-var_dump("sdade" == 0);        //两个都是true，非数字字符串转化为整型为0
-var_dump("sdade" == (string)0);//返回false
-var_dump("897" == 0);          //返回false，数字字符串转化为整型为本身数字
+3.var_dump("897" == 0);                //返回false，数字字符串转化为整型为本身数字
 
-var_dump(!!"testing");         //直接返回bool类型
+4.var_dump(!!"testing");                  //直接返回bool类型
 
-echo false                     //输出空白
-echo true                      //输出1
+5.echo false                                      //输出空白
+   echo true                                       //输出1
 
-
-type:integer整型
+二.type:integer整型
 整型值可以使用十进制，十六进制，八进制和二进制表示，前面可以使用符号（+或者-）
-decimal:[+-]?[1-9][0-9]*         //十进制表示方法
-hexadecimal:[+-]?0[xX][1-9a-fA-F]//十六进制表示方法
-octal:[+-]?0[1-7]+               //八进制表示方法
-binary:[+-]?0[b][01]+            //二进制表示方法
+decimal:[+-]?[1-9][0-9]*                  //十进制表示方法
+hexadecimal:[+-]?0[xX][1-9a-fA-F] //十六进制表示方法
+octal:[+-]?0[1-7]+                             //八进制表示方法
+binary:[+-]?0[b][01]+                        //二进制表示方法
 
-note:
-如果进制数传递一个非法的数字，后面的其余数将会被忽略
-$a=01386将会赋值11
+注意事项:
+1.如果进制数传递一个非法的数字，后面的其余数将会被忽略，如$a=01386将会赋值11
+2.整数的范围可以用常量PHP_INT_MAX来表示如果整数溢出会将int转化为float类，如
+  var_dump(5000000000*5000000000000);     //输出float 2.5E+22
+3.当两个整数不能整除时，会将结果转化为float类型
+  var_dump(17/2);                                                  //输出float 8.5
 
-整数的范围可以用常量PHP_INT_MAX来表示如果整数溢出会将int转化为float类型
-var_dump(5000000000*5000000000000);   输出float 2.5E+22
+4.将float强制转化为int类型是会向下取整
+   var_dump((int)12.9);                                            //输出12
+   var_dump((int)-12.9);                                          //输出-12
 
-当两个整数不能整除时，会将结果转化为float类型
-var_dump(17/2);     输出float 8.5
+5.$a = TRUE;
+   echo ($a++).$a;                                                  // 因为bool类型不能自加，输出11
 
-将float强制转化为int类型是会向下取整
-var_dump((int)12.9);    输出12
-var_dump((int)-12.9);   输出-12
+6.可以将ip地址在数据库中存储为int类型，这样会读写更快
+   var_dump($_SERVER['REMOTE_ADDR']);         //输出192.168.10.1
+   $ipArr = explode('.', $_SERVER['REMOTE_ADDR']);
+   $ip = $ipArr[0] * 0x1000000
+   + $ipArr[1] * 0x10000
+   + $ipArr[2] * 0x100
+   + $ipArr[3];
+   $ipArr    = explode('.',$_SERVER['REMOTE_ADDR']);
+   $ip      = $ipArr[0]<<24
+   + $ipArr[1]<<16
+   + $ipArr[2] <<8
+   + $ipArr[3];
+   var_dump($ip);                                     //输出3232238081
+   var_dump(decbin($ip));                       //输出11000000101010000000101000000001
 
-$a = TRUE;
-echo ($a++).$a;  // 因为bool类型不能自加输出11
+   将$ip进行数据库读写操作
+   从数据库取出得到ip时可以利用右移操作进行，分别保留高位右移24，16，8位得到各位。
+   但是php操作的整数类型，右移会发生超出长度被截断可以将高位除法得到//对这块也不太明白。
+   $ipArr[0]=(floor)($ip/0x1000000);
+   $ip=$ip-$ipArr[0]*0x1000000;
+   $ipArr[1] = ($ip & 0xFF0000)  >> 16;
+   $ipArr[2] = ($ip & 0xFF00)  >> 8;
+   $ipArr[3] = ($ip & 0xFF);
+   $ipDotted=implode('.',$ipArr);
 
-可以将ip地址在数据库中存储为int类型，这样会读写更快
-var_dump($_SERVER['REMOTE_ADDR']);              //输出192.168.10.1
-$ipArr = explode('.', $_SERVER['REMOTE_ADDR']);
-$ip = $ipArr[0] * 0x1000000
-    + $ipArr[1] * 0x10000
-    + $ipArr[2] * 0x100
-    + $ipArr[3];
+三.type:float浮点型
 
-$ipArr    = explode('.',$_SERVER['REMOTE_ADDR']);
-$ip       = $ipArr[0]<<24
-            + $ipArr[1]<<16
-            + $ipArr[2] <<8
-            + $ipArr[3];
-
-var_dump($ip);                                  //输出3232238081
-var_dump(decbin($ip));                          //输出11000000101010000000101000000001
-将$ip进行数据库读写操作
-从数据库取出得到ip时可以利用右移操作进行，分别保留高位右移24，16，8位得到各位
-但是php操作的整数类型，右移会发生超出长度被截断可以将高位除法得到//对这块也不太明白
-$ipArr[0]=(floor)($ip/0x1000000);//192
-$ip=$ip-$ipArr[0]*0x1000000;
-$ipArr[1] = ($ip & 0xFF0000)  >> 16;
-$ipArr[2] = ($ip & 0xFF00)  >> 8;
-$ipArr[3] = ($ip & 0xFF);
-$ipDotted=implode('.',$ipArr);
-
-
-type:float浮点型
-
-note:
-浮点型字长和平台的精度有关
-echo (int)((0.1 + 0.7) * 10);//输出7，因为浮点型0.1和0.7在存储过程中以二进制存储无限循环，不能被精确表示
-0.1+0.7内部表示成7.9999999999999991118...
+注意事项:
+1.浮点型字长和平台的精度有关：
+echo (int)((0.1 + 0.7) * 10);//输出7，因为浮点型0.1和0.7在存储过程中以二进制存储无限循环，不能被精确表示：0.1+0.7内部表示成7.9999999999999991118...。
 因此不要比较两个浮点数是否相等，但可以在相同精度下比较
-$x = 8 - 6.4;
-$y = 1.6;
-var_dump($x == $y); // boolean false
-var_dump(round($x,3) == round($y,3));//boolean true
+   $x = 8 - 6.4;
+   $y = 1.6;
+   var_dump($x == $y);                                 // boolean false
+   var_dump(round($x,3) == round($y,3)); //boolean true
 
-var_dump(1.8e308);//float INF 数据过大时会输出无穷大
+2.var_dump(1.8e308);                                   //float INF 数据过大时会输出无穷大
 
-
-type:string字符串
+四.type:string字符串
 一个字符串可以用四种方式来表达
-单引号
-双引号
-heredoc 语法结构
-nowdoc 语法结构
+单引号；
+双引号；
+heredoc 语法结构；
+nowdoc 语法结构。
 
-note:
-单引号：
-会原样输出单引号里面的内容，只转义反斜线(\)和单引号自身(')
-是不会转义其他序列(例如\n,\r),也不会转义变量($a)
-echo 'I \'m coming in';//I 'm coming in
-echo 'C:\\movie';      //C:\movie
-echo 'This will not expand: \n a newline';//This will not expand: \n a newline
+注意事项:
+1.单引号：
+会原样输出单引号里面的内容，只转义反斜线(\)和单引号自身(')不会转义其他序列(例如\n,\r),也不会转义变量($a)。
+echo 'I \'m coming in';                                //I 'm coming in
+echo 'C:\\movie';                                         //C:\movie
+echo 'This will not expand: \n a newline'; //This will not expand: \n a newline
 echo 'Variables do not $expand $either';//Variables do not $expand $either
 
-双引号：
+2.双引号：
 会输出双引号里面的内容，转义符号()和变量
-\n	换行
-\r	回车
-\t	水平制表符
-\v	垂直制表符
-\e	Escape
-\f	换页
-\\	反斜线
-\$	美元标记
+\n 换行
+\r 回车
+\t 水平制表符
+\v 垂直制表符
+\e Escape
+\f 换页
+\\ 反斜线
+\$ 美元标记
 
-HereDoc结构：
+3.HereDoc结构：
 Heredoc结构就象是没有使用双引号的双引号字符串。
-<<<,在该运算符之后要提供一个标识符(可以用双引号括起来)，然后换行，接下来是字符串本身，里面的字符将会被转义，
-最后要用前面定义的标识符作为结束标志，在结束标志符后面只能加一个分号，然后换行。
-
+<<<,在该运算符之后要提供一个标识符(可以用双引号括起来)，然后换行，接下来是字符串本身，里面的字符将会被转义，最后要用前面定义的标识符作为结束标志，在结束标志符后面只能加一个分号，然后换行。
 class foo
 {
-    var $foo;
-    var $bar;
-
-    function foo()
-    {
-        $this->foo = 'Foo';
-        $this->bar = array('Bar1', 'Bar2', 'Bar3');
-    }
+var $foo;
+var $bar;
+function foo()
+{
+$this->foo = 'Foo';
+$this->bar = array('Bar1', 'Bar2', 'Bar3');
 }
-
+}
 $foo = new foo();
 $name = 'MyName';
-
-echo <<<EOT
+echo <<
 My name is "$name". I am printing some $foo->foo.
 Now, I am printing some {$foo->bar[1]}.
 This should print a capital 'A': \x41
@@ -148,60 +136,52 @@ My name is "MyName". I am printing some Foo.
 Now, I am printing some Bar2.
 This should print a capital 'A': A
 
-NowDoc结构:
+4.NowDoc结构:
 NowDoc结构类似于单引号字符串，用来将大段的字符串原样输出
 <<<,后面的标识符要用单引号括起来，如<<<'EOT'
 
-字符串拼接：
-字符串拼接使用',',注意'+'没有这个功能
-
-变量解析：当字符串内含有复杂语法时，需要使用花括号进行解析。
+5.字符串拼接：字符串拼接使用',',注意'+'没有这个功能
+6.变量解析：当字符串内含有复杂语法时，需要使用花括号进行解析。
 class beers {
-    const softdrink = 'rootbeer';
-    public static $ale = 'ipa';
+const softdrink = 'rootbeer';
+public static $ale = 'ipa';
 }
-
 $rootbeer = 'A & W';
 $ipa = 'Alexander Keith\'s';
-
 echo "I'd like an {${beers::softdrink}}\n";//输出： I'd like an A & W
+echo "I'd like an {${beers::$ale}}\n";       //输出： I'd like an Alexander Keith's
 
-echo "I'd like an {${beers::$ale}}\n";//输出： I'd like an Alexander Keith's
-
-字符串转换为数值：
+7.字符串转换为数值：
 PHP是一个弱类型语言，当一个字符串被用来当做一个数值来取值时：
 如果字符串里面以合法的数值开始，则取该数值，否则其值为0
-$foo = "0123" + 0;                // 123,这里是十进制，而不是八进制
-$foo = 1 + "bob3";                // 1
-$foo = 1 + "10 Small Pigs";       //11
+$foo = "0123" + 0;                     // 123,这里是十进制，而不是八进制
+$foo = 1 + "bob3";                    // 1
+$foo = 1 + "10 Small Pigs";      //11
 
-
-type:array数组
+五.type:array数组
 定义方法：
-1.array(key=>value,......)
-2.[key=>value]
-key可以是整型或者字符串，value可以是任何类型
+array(key=>value,......)，[key=>value]key可以是整型或者字符串，value可以是任何类型.
 
-note：
-key会有如下的强制转换：
-包含有合法的整型值的字符串会被转换为整型。例如键名"8"，实际会被存储为8，但是"08"则不会强制转换，因为其不是一个合法的十进制数
-var_dump(array('4'=>4)); //4 => int 4
+注意事项：
+1.key会有如下的强制转换：
+(1)包含有合法的整型值的字符串会被转换为整型。例如键名"8"，实际会被存储为8，但是"08"则不会强制转换，因为其不是一个合法的十进制数
+var_dump(array('4'=>4));  //4 => int 4
 var_dump(array('04'=>4));//'04' => int 4
 var_dump(array('4.3'=>4));//'4.3' => int 4
 
-浮点数也会被转化为整型，意味着小数部分会被舍去，如键名8.7实际会存储为8
+(2)浮点数也会被转化为整型，意味着小数部分会被舍去，如键名8.7实际会存储为8
 var_dump(array(8.7 => 4));//  8 => int 4
 
-布尔值也会被转换为整型。即键名true实际存储为1，而键名false实际存储为0
+(3)布尔值也会被转换为整型。即键名true实际存储为1，而键名false实际存储为0
 var_dump(array(true => 1, false => 0));//array (size=2)1 => int 1  0 => int 0
 
-Null会被转换为空字符串，即键名null
+(4)Null会被转换为空字符串，即键名null
 var_dump([null=>'asd']);//'' => string 'asd'
 
-key是可选项，如果未指定，PHP将自动使用之前用过的最大整型键名加上1作为新的键名
+2.key是可选项，如果未指定，PHP将自动使用之前用过的最大整型键名加上1作为新的键名
 array("foo", "bar", 11 => "hello", "world");//0 =>'foo' 1 =>'bar' 11 => 'hello'  12 => 'world'
 
-unset用来删除一个数组中的某个键，但是不会重建索引。如果需要删除后重建索引，需要array_values()函数
+3..unset用来删除一个数组中的某个键，但是不会重建索引。如果需要删除后重建索引，需要array_values()函数
 unset($a[12]);
 print_r($a);//Array ( [0] => foo [1] => bar [11] => hello )
 $a[] = 'new';
@@ -209,48 +189,43 @@ print_r($a);//Array ( [0] => foo [1] => bar [11] => hello [13] => new )
 $b=array_values($a);
 print_r($b);//Array ( [0] => foo [1] => bar [2] => hello [3] => new )
 
-
-type：object对象
+六.type：object对象
 对象初始化：要创建一个新的对象object，使用new实例化一个类
 class foo
 {
-    function do_foo()
-    {
-        echo "Doing foo.";
-    }
+function do_foo()
+{
+echo "Doing foo.";
 }
-
+}
 $bar = new foo;
 $bar->do_foo();//Doing foo.
 
+注意事项：
 将一个对象转换成对象，将不会发生变化，如果其他任何类型的值转换为对象，将会创建一个内置stdClass的类，
 如果该值为null，新的实例为空。
 数组转换，将使键名转换为属性名并具有相应的值。
 对于任何其他的值，名为scalar的成员变量将包含该变量。
 var_dump((object)null);//object(stdClass)[2]
 var_dump((object)array('first'=>2, 'second'=>4, 'last' => 3));//object(stdClass)[2]
-                                                                public 'first' => int 2
-                                                                public 'second' => int 4
-                                                                public 'last' => int 3
-                                                                可用来对对象的属性进行赋值
+public 'first' => int 2
+public 'second' => int 4
+public 'last' => int 3
+可用来对对象的属性进行赋值
 $obj = (object)array(2, 4, 'new' => 3);
 var_dump($obj->0);//会报错
-
 var_dump((object)'srtToObj');//object(stdClass)[2]
-                                 public 'scalar' => string 'srtToObj' (length=8)
+public 'scalar' => string 'srtToObj' (length=8)
 
+七.type:null
+特殊的NULL值表示一个变量没有值，NULL唯一的可能值就是null,下列情况下变量被认为是null：
+被赋值为null;
+尚未被赋值;
+被unset();
 
-type:null
-特殊的NULL值表示一个变量没有值，NULL唯一的可能值就是null
-下列情况下变量被认为是null：
-被赋值为null
-尚未被赋值
-被unset()
-
-note:
+注意事项:
 空数组和null在==运算符时返回true，在===运算符和is_null()下返回false
 $a=array();
 var_dump($a==null);//true
 var_dump($a===null);//false
 var_dump(is_null($a));//false
-
