@@ -39,4 +39,88 @@ $obj->a();//a
 $obj->b();//trick::b
 
 
+__CLASS__,get_class(),get_called_class()的区别：
+__CLASS__是静态绑定，如果不在子类里重载的话，那么继承父类方法所得到的依旧是父类的名称，而不是子类的名称，如：
+class A
+{
+    function __construct()
+    {
+        echo __CLASS__;
+    }
+
+    static function name()
+    {
+        echo __CLASS__;
+    }
+}
+
+class B extends A
+{
+}
+
+$b = new B();//A
+B::name();//A
+无论实例化还是直接调用静态方法，子类__CLASS__都是输出父类的类名。
+
+在不带参数时get_class()的返回结果和__CLASS__相同。
+class A
+{
+    function __construct()
+    {
+        echo get_class();
+    }
+
+    static function name()
+    {
+        echo get_class();
+    }
+}
+
+class B extends A
+{
+}
+
+$b = new B();//A
+B::name();//A
+
+get_class($this)得到调用类本身的类名
+class A
+{
+    function __construct()
+    {
+        echo get_class($this);
+    }
+}
+
+class B extends A
+{
+}
+
+$b = new B();//B
+
+get_called()得到当前主调类的类名
+class A
+{
+    function __construct()
+    {
+        echo get_called_class();
+    }
+
+    static function name()
+    {
+        echo get_called_class();
+    }
+}
+
+class B extends A
+{
+}
+
+$b = new B();//B
+B::name();//B
+
+
+
+
+
 
