@@ -1,0 +1,56 @@
+三目运算符：
+$a=true?0:true?1:2;//($a=true?0:true)?1:2  $a=2
+
+算术运算符：
+$a%$b,运算结果和$a的符号相同
+echo 5 % 3;//2
+echo 5 % -3;//2
+echo -5 % 3;//-2
+echo -5 % -3;//-2
+取模运算符%的操作数在运算之前都会取整：
+echo 7 % 3.5;//1
+echo 6.2 % 3.5;//0
+
+**幂运算符
+$a=3；
+echo $a**$a;//27
+
+赋值操作符：
+赋值运算符是右联的
+$a=1;
+$b=2;
+$a=$b+=3;//$a=($b+=3)a=5,b=5
+
+赋值运算符时将变量的值拷贝到新变量中（传值赋值），所以改变一个不会影响另外一个。
+引用赋值表示两个变量指向了同一个数据，没有拷贝任何东西。
+$a = 3;
+$b =& $a;
+echo $a;//3
+echo $b;//3
+$b=5;
+echo $a;//5
+echo $b;//5
+
+在普通的传值赋值的行为有个例外就是碰到对象（object）时，是引用赋值，除非明确使用了clone来拷贝。
+$instance = new stdClass();//创建了一个stdClass类的对象实例，$instance指向这个对象。
+$assigned   =  $instance;//将$instance指向的对象stdClass传递给$assigned，使$assigned也指向这个对象
+$reference  =& $instance;//将$instance引用传递给$reference，$reference指向$instance
+
+$instance->var = '$assigned will have this value';//修改对象的属性var
+$instance = null;//将$instance置为null就不在指向对象了，$reference引用的$instance也不指向对象，而$assigned依旧指向对象
+
+var_dump($instance);//null
+var_dump($reference);//null
+var_dump($assigned);object(stdClass)[2] public 'var' => string '$assigned will have this value' (length=30)
+
+
+位运算符
+$a & $b;//按位与
+$a | $b;//按位或
+$a ^ $b;//按位异或
+~ $a;//按位取反
+$a << $b;//$a左移$b位，每一次移动相当于乘以2，右侧以0填充
+$a >> $b;//$a右移$b位，每一次移动相当于除以2，左侧以符号位填充
+
+
+
