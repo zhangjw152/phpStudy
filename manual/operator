@@ -105,6 +105,62 @@ drwxr-xr-x 1 vagrant vagrant   340 Mar 14 13:23 ..
 -rw-r--r-- 1 vagrant vagrant  6676 Mar 11 13:17 variable
 
 数组运算符
+$a+$b:联合，$a和$b的联合，把右边的元素附加到左边的数组后面，两个数组都有的键名，只用左边数组中的，右边的被忽略
+$a=array('a'=>'apple','c'=>'banana');
+$b=array('a'=>'pear','b'=>'cherry');
+var_dump($a+$b);array (size=3)
+                  'a' => string 'apple' (length=5)
+                  'c' => string 'banana' (length=6)
+                  'b' => string 'cherry' (length=6)
+var_dump($b+$a);array (size=3)
+                  'a' => string 'pear' (length=4)
+                  'b' => string 'cherry' (length=6)
+                  'c' => string 'banana' (length=6)
+
+$a==$b:相等，如果$a和$b有相同的键值对，则返回true
+$a==$b:全等，如果$a和$b有相同的键值对，并且顺序一样，则返回true
+$a=array('apple','pear');
+$b=array('1'=>'pear',0=>'apple');
+var_dump($a==$b) ;//boolean true
+var_dump($a===$b) ;//boolean false
+
+$c=array(0=>'apple','1'=>'pear');
+var_dump($a===$b) ;//boolean true
+
+
+类型运算符：
+instanceof用于确定一个PHP变量是否属于某一类class的实例
+class MyClass{}
+class NotMyClass{}
+$a=new MyClass();
+var_dump($a instanceof MyClass);//boolean true
+var_dump($a instanceof NotMyClass);//boolean false
+
+也可以用来判断变量是不是继承自某父类的子类的实例
+class ParentClass{}
+class MyClass extends ParentClass {}
+$a=new MyClass();
+var_dump($a instanceof ParentClass);//boolean true
+var_dump($a instanceof MyClass);//boolean true
+
+也可以用来判断变量是不是实现了某个接口的对象的实例
+interface MyInterface{}
+class Myclass implements MyInterface{}
+$a=new Myclass();
+var_dump($a instanceof MyInterface);//boolean true
+var_dump($a instanceof MyClass);//boolean true
+
+也可以用来判断两个变量是否属于同一类的实例
+class ParentClass{}
+class A extends ParentClass {}
+class B{}
+$parent=new ParentClass();
+$a=new A();
+$b=new B();
+$a1=new A();
+var_dump($a instanceof $b);//boolean false
+var_dump($a instanceof $parent);//boolean true
+var_dump($a instanceof $a1);//boolean true
 
 
 
