@@ -53,4 +53,62 @@ $a << $b;//$a左移$b位，每一次移动相当于乘以2，右侧以0填充
 $a >> $b;//$a右移$b位，每一次移动相当于除以2，左侧以符号位填充
 
 
+比较运算符
+$a==$b//类型转化后相等
+$a===$b//值相等，且类型相同
+$a!=$b//类型转化后不相等
+$a!==$b//值不相等或者类型不同
+$a<>$b//类型转换后不相等
+$a<=>$b//$a小于，等于，大于$b时，分别返回-1，0，1
+$a??$b??$c//从左往右第一个存在，且不为null的操作数，如果都没有定义且不为null，则返回null
+
+var_dump(0 == "a");//boolean true
+var_dump(1=="01");//boolean true
+
+echo "a" <=> "a"; // 0
+echo "a" <=> "b"; // -1
+echo "b" <=> "a"; // 1
+
+比较多种类型：
+ 运算数1类型       运算数2类型        结果
+null或string       string          将null转化成""，进行数字或词汇的比较
+bool或null         任何其他类型      转化为bool，false<true
+string或number   string或number    转化为数字，按照普通数字比较
+array               array          具有较少成员的数组小，如果运算数1的键不存在与运算数2中，无法比较，否则挨个比较
+
+echo 0 ?: 1 ?: 2 ?: 3; //1
+echo 1 ?: 0 ?: 3 ?: 2; //1
+echo 2 ?: 1 ?: 0 ?: 3; //2
+echo 3 ?: 2 ?: 1 ?: 0; //3
+返回第一个不为0的数
+
+
+错误控制运算符
+PHP 支持一个错误控制运算符：@。当将其放置在一个 PHP 表达式之前，该表达式可能产生的任何错误信息都被忽略掉。
+$value = @$cache[$key];
+// will not issue a notice if the index $key doesn't exist.
+
+执行运算符
+php支持执行运算符：反引号``，php尝试将反引号中的内容作为shell命令来执行，并将输出结果返回
+$output = `ls -al`;
+echo "<pre>$output</pre>";
+total 56
+drwxr-xr-x 1 vagrant vagrant   340 Mar 19 03:52 .
+drwxr-xr-x 1 vagrant vagrant   340 Mar 14 13:23 ..
+-rw-r--r-- 1 vagrant vagrant  9489 Mar 11 01:51 DataType
+-rw-r--r-- 1 vagrant vagrant  2894 Mar 13 14:18 constant
+-rw-r--r-- 1 vagrant vagrant    55 Feb 28 14:10 index.php
+-rw-r--r-- 1 vagrant vagrant   247 Mar 11 16:55 memo
+-rw-r--r-- 1 vagrant vagrant  3264 Mar 19 03:52 operator
+-rw-r--r-- 1 vagrant vagrant 12373 Mar 19 03:52 test.php
+-rw-r--r-- 1 vagrant vagrant    20 Feb 28 14:44 untitled.php
+-rw-r--r-- 1 vagrant vagrant  6676 Mar 11 13:17 variable
+
+数组运算符
+
+
+
+
+
+
 
