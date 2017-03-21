@@ -1,0 +1,89 @@
+$v = 'My Value';
+$r = ($v) ?: 'No Value';
+echo $r;//My Value
+
+for($col = 'R'; $col != 'AD'; $col++) {
+    echo $col.' ';
+}//R S T U V W X Y Z AA AB AC
+
+下面的表达式2的所耗时间较表达式1短，因为在表达式1中每次循环中都要计算$arr的长度
+1.for ($i=0;$i<count($arr);$i++){
+
+}
+2.$len=count($arr);
+for ($i=0;$i<$len;$i++){
+
+}
+
+在foreach中可以通过在$value之前加上&来修改数组中的元素。此方法将以引用赋值，而不是拷贝
+$arr=array(1,2,3,4);
+foreach ($arr as &$value){
+    $value=$value*2;
+}
+print_r($arr);
+数组的最后一个元素的$value引用在foreach循环之后仍然保留，应使用unset()将其销毁
+unset($value);
+
+break,continue和return：
+break用来结束当前for，foreach，while，do-while，或者switch结构的执行，可以加数字参数来决定跳出几层循环
+$i = 0;
+while (++$i) {
+    switch ($i) {
+        case 5:
+            echo "At 5<br />\n";
+            break 1;  /* 只退出 switch. */
+        case 10:
+            echo "At 10; quitting<br />\n";
+            break 2;  /* 退出 switch 和 while 循环 */
+        default:
+            break;
+    }
+}
+输出：
+  At 5
+  At 10; quitting
+continue在循环结构中用来跳出本次循环中剩余的代码并在条件求值为真的情况下开始执行下次循环
+$arr=array('first','second','third','fourth','fifth');
+foreach ($arr as $key){
+    if($key=='second')continue;
+    if($key=='fourth')break;
+    echo $key;
+}//输出first，third
+
+return将立即结束函数的执行，并返回参数作为函数的值
+return可以用在配置文件中
+<?php
+return [
+  'site' => 123,
+  'settings' => 'asd'
+];
+$config = (require 'config.php');
+
+
+switch语句的default的位置不会对结果产生影响
+for($i=0; $i<8; ++$i)
+{
+    echo $i,"\t";
+    switch($i)
+    {
+        case 1: echo "One"; break;
+        case 2:
+        default: echo "Thingy"; break;
+        case 3:
+        case 4: echo "Three or Four"; break;
+        case 5: echo "Five"; break;
+    }
+    echo "\n";
+}
+0       Thingy
+1       One
+2       Thingy
+3       Three or Four
+4       Three or Four
+5       Five
+6       Thingy
+7       Thingy
+
+
+
+
