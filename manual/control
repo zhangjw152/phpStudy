@@ -85,5 +85,9 @@ for($i=0; $i<8; ++$i)
 7       Thingy
 
 
+require、include、require_once和include_once的区别
+require在出错时会导致脚本停止运行，include在出错时会给出一条警告
+require_once和include_once会检查文件是否包含过，如果是则不会被包含
 
-
+goto操作符可以是程序跳转到另外一个位置。该位置用目标名称加上冒号来标记，跳转指令是goto之后接上目标位置的标记。
+goto有一定限制，目标位置只能位于同一个文件合作用域，无法跳出一个函数或者类方法，也无法跳入到任何循环h或者switch结构中。
