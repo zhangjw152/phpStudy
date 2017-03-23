@@ -1,0 +1,46 @@
+函数的参数
+通过引用传递参数：
+默认情况下，函数参数通过值参数，函数内部修改参数的值，并不会改变函数外部的值。如果希望允许函数修改它的参数值，必须通过引用传递参数。
+如果想要函数的一个参数总是通过引用传递，可以在函数定义中该参数的前面加上符号&。
+function addSomeStr(&$instr){
+    $instr.=',and something extra';
+}
+$outstr='this is a thing';
+addSomeStr($outstr);
+echo $outstr;//this is a thing,and something extra
+
+默认参数值
+function eat($food='rice'){
+    return $food;
+}
+echo eat().'<br />';
+echo eat(null).'<br />';
+echo eat('noodle').'<br />';
+
+可以指定参数类型：
+在5.1版本中可以指定参数类型为array
+在7.0版本中可以指定参数类型为bool，int，float，string
+加入传递的参数和函数定义的参数类型不一致，会返回一个错误。
+默认的是弱类型，php会尽可能将传递来的不符合类型定义的参数转化为符合类型定义的参数，
+例如，当函数的的指定类型为string类型，会将传过来的int类型转化为string类型。
+当声明为严格类型的时候，如果传过来的参数类型与制定的不一致，会报错。
+弱类型：
+function sum(int $a, int $b) {
+    return $a + $b;
+}
+
+var_dump(sum(1, 2));//3
+var_dump(sum(1.5, 2.5));//3
+
+强类型：
+declare(strict_types=1);
+
+function sum(int $a, int $b) {
+    return $a + $b;
+}
+var_dump(sum(1, 2));//3
+var_dump(sum(1.5, 2.5));//会报错
+
+
+
+
