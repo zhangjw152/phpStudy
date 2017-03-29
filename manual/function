@@ -29,8 +29,8 @@ function sum(int $a, int $b) {
     return $a + $b;
 }
 
-var_dump(sum(1, 2));//3
-var_dump(sum(1.5, 2.5));//3
+var_dump(sum(1, 2));//int (3)
+var_dump(sum(1.5, 2.5));// (3)
 
 强类型：
 declare(strict_types=1);
@@ -41,6 +41,108 @@ function sum(int $a, int $b) {
 var_dump(sum(1, 2));//3
 var_dump(sum(1.5, 2.5));//会报错
 
+可变数量的参数列表
+...可在用户自定义的函数中支持可变数量的参数列表
+function sum(...$nums)
+{
+    $sum = 0;
+    foreach ($nums as $num) {
+        $sum += $num;
+    }
+    return $sum;
+}
+echo sum(2,45,7,8);
 
+
+在php7，指定了返回类型，当为弱类型时，会将返回值结果转化为函数定义的返回类型；
+当为强类型时，函数结果类型和定义返回类型不一致时，会返回错误。
+function sum($a, $b): float {
+    return $a + $b;
+}
+var_dump(sum(1, 2));//返回float(3)
+
+declare(strict_types=1);
+
+function sum($a, $b): int {
+    return $a + $b;
+}
+var_dump(sum(1, 2));int(3)
+var_dump(sum(1, 2.5));会报错
+
+
+可变函数：类和类中的方法都可以用数组变量进行表示
+class Foo
+{
+    static function baz()//静态方法
+    {
+        echo 'baz';
+    }
+
+    function bar()
+    {
+        echo 'bar';
+    }
+}
+$baz=array('Foo','baz');
+$bar=array(new Foo,'bar');
+$baz();//baz
+$bar();//bar
+
+匿名函数也叫闭包函数
+允许临时创建一个没有指定名称的函数。最经常用作回调函数参数的值
+echo preg_replace_callback('~-([a-z])~', function ($match) {
+    return strtoupper($match[1]);
+}, 'hello-world');//返回helloWorld
+
+闭包函数可以作为变量来使用
+$greet = function ($name) {
+    echo 'hello' . $name;
+};
+$greet('world');
+
+闭包可以从父作用域中继承变量,变量用use结构传递进去,这些变量都应该在函数或类的头部声明。
+$greet = 'hello';
+$message = function () use ($greet) {
+    echo $greet;
+};
+$message();
+
+class cart
+{
+    const PRICE_BUTTER = 1.00;
+    const PRICE_MILK = 3.00;
+    const PRICE_EGGS = 6.95;
+
+    protected $products = array();
+
+    public function add($product, $quality)
+    {
+        $this->products[$product] = $quality;
+    }
+
+//    public function getQuality($product)
+//    {
+//        return isset($this->products[$product]) ? $this->products[$product] : false;
+//    }
+
+    public function getTotal($tax)
+    {
+//        var_dump($this->products);
+        $total = 0.00;
+        $callback = function ($quality, $product) use ($tax, &$total) {
+            $pricePerItem = constant(__CLASS__ . '::PRICE_' . strtoupper($product));
+            $total += $pricePerItem * $quality * ($tax + 1);
+        };
+        array_walk($this->products, $callback);
+        return round($total, 2);
+    }
+}
+
+$cart = new cart();
+
+$cart->add('butter', 2);
+$cart->add('milk', 1);
+$cart->add('eggs', 8);
+print $c
 
 
