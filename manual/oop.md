@@ -214,7 +214,7 @@ echo $sub->private;//错误
 $sub->printAll();//public1 protected1 undefined
 </code></pre>
 
-*eg.*物品的属性有标签和价格，当设计物品的类的时候要考虑不能在类的外部直接访问类的内部属性，还有对外部的值进行类型过滤。
+*eg.* 物品的属性有标签和价格，当设计物品的类的时候要考虑不能在类的外部直接访问类的内部属性，还有对外部的值进行类型过滤。
 <pre><code>
 class Item
 {
@@ -246,6 +246,225 @@ class Item
     }
 }
 </code></pre>
+
+##继承
+子类会继承父类所有公有和被保护的方法，除非子类覆盖父类的方法，被继承的方法都会保留原有功能。
+php是单继承，不支持多继承。这是指php只能从一个类只能继承一个类不能继承多各类，但是可以继承一个子类
+*eg.* 
+<pre><code>
+class A
+{
+}
+
+class B extends A
+{
+}
+
+class C extends B
+{
+}
+</code></pre>
+
+##范围解析操作符(::)
+范围解析符用于访问静态成员，类常量，还可以用于覆盖类的方法和属性。
+在类的内部使用self，parent和static关键词加：：对类的方法和属性进行访问。
+在类的外部使用类名加：：对类的方法和属性进行操作访问。
+
+##静态关键字static
+声明类属性或方法为静态，就可以不实例化直接访问。静态属性不可以通过已经实例化的对象访问，但是静态方法可以。
+由于静态方法不需要通过对象就可以调用，所以$this在静态方法中不可用。
+静态属性只能被初始为文字和数字，不可以使用表达式
+<pre><code>
+class Myclass
+{
+    static $my_static = 'static value';
+
+    static function getStaticValue()
+    {
+        return self::$my_static;
+    }
+}
+$myObj=new Myclass();
+echo $myObj::$my_static;//static value
+echo $myObj::getStaticValue();//static value
+echo $myObj->$my_static;//不可访问静态属性
+echo $myObj->getStaticValue();//static value
+</code></pre>
+
+##后期静态绑定
+static::后期静态绑定，不在被解析为定义当前方法所在的类，而是在实际运行中时计算的。也可称为静态绑定，是因为可以用于静态方法的调用
+使用self对当前类的静态引用，取决于定义当前方法所在的类:
+<pre><code>
+class A
+{
+    public static function who()
+    {
+        echo __CLASS__;
+    }
+
+    public static function test()
+    {
+        self::who();
+    }
+}
+
+class B extends A
+{
+    public static function who()
+    {
+        echo __CLASS__;
+    }
+}
+B::test();//A
+</code></pre>
+
+使用static时：
+<pre><code>
+class A
+{
+    public static function who()
+    {
+        echo __CLASS__;
+    }
+
+    public static function test()
+    {
+        static::who();
+    }
+}
+
+class B extends A
+{
+    public static function who()
+    {
+        echo __CLASS__;
+    }
+}
+B::test();//B
+</code></pre>
+
+<pre><code>
+class A
+{
+    public static function foo()
+    {
+        static::who();
+    }
+
+    public static function who()
+    {
+        echo __CLASS__ . "\n";
+    }
+}
+
+class B extends A
+{
+    public static function test()
+    {
+        A::foo();
+        parent::foo();
+        self::foo();
+    }
+
+    public static function who()
+    {
+        echo __CLASS__ . "\n";
+    }
+}
+
+class C extends B
+{
+    public static function who()
+    {
+        echo __CLASS__ . "\n";
+    }
+}
+C::test();//A C C
+</code></pre>
+C类中没有test方法，从父类B中找，执行B类中的test方法。
+A::foo调用的是A类的方法，输出A。
+parent::foo是static调用当前类C的的foo方法，
+self::foo是调用B类的foo方法，但是该类没有对foo复写，找父类A中的foo方法，打印调用类C中的类名
+
+##抽象类
+PHP5支持抽象类和抽象方法。定义为抽象的类不能被实例化。任何一个类，如果它里面的至少一个方法被声明为抽象的，那么这个类就必须被声明为抽象的。被声明为抽象的方法只是声明了其调用方式，不能定义其具体功能。
+* 继承一个抽象类的时候，子类必须定义父类的所有方法；
+* 实现类中方法的访问控制必须和抽象类一致，或者比抽象类更为宽松，如抽象方法如果是protected的，子类中实现方法必须是public或者protected的，而不能是private的；
+* 方法的调用方式必须匹配，即类型和参数数量必须一致，子类中可以定义一个抽象类中没有的可选参数。 
+<pre><code>
+abstract class AbstractClass
+{
+    abstract protected function prefixName($name);
+}
+
+class ConcreateClass extends AbstractClass
+{
+    public function prefixName($name, $separator = '.')
+    {
+        if ($name == 'Pacman') {
+            $prefix = 'Mr';
+        } elseif ($name == 'Pacwoman') {
+            $prefix = 'Mrs';
+        } else {
+            $prefix = '';
+        }
+        return $prefix.$separator.$name;
+    }
+}
+$obj=new ConcreateClass();
+echo $obj->prefixName('Pacman');//Mr.Pacman
+echo $obj->prefixName('Pacwoman','_');//Mrs_Pacwoman
+</code></pre>
+
+##对象接口
+使用接口，必须指定某个类必须实现哪些方法，但不需要定义这些方法的具体内容。
+接口是通过interface关键词定义的，定义的方法都必须是公有的。
+###实现
+实现一个操作通过implements操作符，类中必须实现接口中的所有方法，否则会报错。
+接口可以多继承
+<pre><code>
+interface A
+{
+    public function foo();
+}
+
+interface B
+{
+    public function bar();
+}
+
+interface C extends A, B
+{
+    public function baz();
+}
+
+class D implements C
+{
+    public function foo()
+    {
+    }
+    public function bar()
+    {
+    }
+    public function baz()
+    {
+    }
+}
+</code></pre>
+
+* 抽象类和接口：
+1. 两者都不能实例化
+2. 抽象类要被子类继承，接口要被类实现
+3. 接口只能做方法声明，抽象类既可做方法声明也可做方法实现
+4. 接口中定义的方法只能是public的，而抽象类可以是public或protected的
+5. 抽象类所有抽象方法必须由的子类实现，如果子类不能实现，那么该子类只能为抽象类。同样一个实现接口的时候，如果不能实现全部接口方法，那该类也只能为抽象类。
+6. 一个类只能继承一个抽象类，一个类可以实现多个接口
+7. 抽象类是对一个事物的抽象，即对类的抽象，接口是对行为的抽象
+8. 抽象类作很多子类的父类，是一种模板设计，而接口是一种行为规范
+
+##trait
+
+
 
 
 
