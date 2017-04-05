@@ -463,9 +463,141 @@ class D implements C
 8. 抽象类作很多子类的父类，是一种模板设计，而接口是一种行为规范
 
 ##trait
+为php解决单继承的一种代码复用机制。使开发人员能够在不同层次结构内独立的类中复用method，无法通过trait自身来实例化。
+为传统的继承增加了水平特性的组合，也就是说，应用的几个class之间不能继承。
+###优先级
+从基类继承的成员会被trait插入的成员覆盖。优先顺序：当前类成员>trait方法>被继承的方法
+<pre>
+class Base
+{
+    function sayHello()
+    {
+        echo 'hello';
+    }
+}
 
+trait SayWorld
+{
+    function sayHello()
+    {
+        parent::sayHello();
+        echo 'world';
+    }
+}
 
+class MyHelloWorld extends Base
+{
+    use SayWorld;
+}
 
+$o = new MyHelloWorld();
+$o->sayHello();//hello world
+</pre>
+<pre>
+trait A
+{
+    function sayHello()
+    {
+        echo 'hello';
+    }
+}
 
+class B
+{
+    use A;
+    function sayHello()
+    {
+        echo 'world';
+    }
+}
+$b=new B();
+$b->sayHello();//world
+</pre>
+###多个trait
+<pre>
+trait SayHello
+{
+    function sayHello()
+    {
+        echo 'hello';
+    }
+}
+
+trait SayWorld
+{
+    function sayWorld()
+    {
+        echo 'world';
+    }
+}
+
+class HelloWorld
+{
+    use SayHello, SayWorld;
+}
+
+$helloWorld = new HelloWorld();
+$helloWorld->sayHello();//hello
+$helloWorld->sayWorld();//world
+</pre>
+
+trait也可以定义属性，定义了一个属性以后，类就不能定义相同名称的属性，否则会产生错误
+<pre>
+trait MyTrait
+{
+    public $var = 1;
+}
+
+class MyClass
+{
+    use MyTrait;
+    public $var=2;//出错
+}
+</pre>
+和继承不同，如果trait中有静态属性，则每个使用trait的类独立的含有该属性
+<pre>
+class Test
+{
+    public static $var;
+}
+class A extends Test{}
+class B extends Test{}
+A::$var='hello';
+B::$var='world';
+echo A::$var;//world
+echo B::$var;//world
+---------------------------------------
+trait Test
+{
+    public static $var;
+}
+
+class A
+{
+    use Test;
+}
+
+class B
+{
+    use Test;
+}
+A::$var='hello';
+B::$var='world';
+echo A::$var;//hello
+echo B::$var;//world
+</pre>
+
+##匿名类
+PHP7开始支持匿名类。可以创建一次性对象
+<pre>
+$util->setLogger(new class {
+    public function log($msg)
+    {
+        echo $msg;
+    }
+});
+</pre>
+
+##魔术方法
 
 
