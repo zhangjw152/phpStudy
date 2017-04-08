@@ -599,5 +599,170 @@ $util->setLogger(new class {
 </pre>
 
 ##魔术方法
+__construct(),__destruct(),__call(),__callStatic(),__get(),__set(),__isset(),__unset(),__sleep(),__wakeup(),__toString(),__invoke(),__set_state(),__clone(),__debugInfo()在PHP中被称为魔术方法
+>__call(),当所调用的成员方法不存在(或者没有权限)该类时调用，对错误后做一些操作或者提示信息。
+__callStatic(),所调用的方法为静态方法时调用该函数。
+<pre>
+class Person
+{
+    public $name;
+    private $age;
+
+    function walk($length)
+    {
+        echo $this->name . 'walk' . $length . 'km';
+    }
+
+    function __call($name, $arguments)
+    {
+        echo $name . 'cannot find the param is' ;
+        print_r($arguments);
+    }
+    static function __callStatic($name, $arguments)
+    {
+        echo $name . 'cannot find the static function the param is' ;
+        print_r($arguments);
+    }
+}
+$person=new Person();
+$person->name='joe';
+$person->walk(90);//joe walk 90km
+$person->run(89);//run cannot find the param isArray ( [0] => 89 )
+Person::run(89);//run cannot find the static function the param isArray ( [0] => 89 )
+</pre>
+>__clone(),该函数在对象克隆是自动调用，其作用是是对克隆的副本做一些初始化操作。
+<pre>
+class Computer
+{
+    public $cpu='inter';
+    function __clone()
+    {
+        $this->cpu='AMD';
+    }
+}
+$c1=new Computer();
+$c2=clone $c1;
+echo $c1->cpu;//inter
+echo $c2->cpu;//AMD
+</pre>
+
+>__get(),当所调用的成员属性未声明或者不可访问时，可在函数中做一些操作
+<pre>
+class Person
+{
+    public $name;
+    private $sex;
+    function __get($name)
+    {
+        echo $name.'不存在或者不可访问';
+    }
+}
+$person=new Person();
+$sex=$person->sex;//sex不存在或者不可访问
+</pre>
+
+>__set()当对未定义或者不可访问的成员属性进行赋值时调用此函数。
+<pre>
+class Person
+{
+    public $name;
+    private $sex;
+    function __set($name, $value)
+    {
+        echo '对'.$name.'赋值'.$value.'失败';
+    }
+
+}
+$person=new Person();
+$person->sex='male';//对sex赋值male失败
+</pre>
+
+>__isset(),当一个未声明或者访问受限的成员属性调用isset函数时调用该函数
+__unset(),当一个未声明或者访问受限的成员属性调用unset函数时调用该函数
+__toString(),将对象引用作为字符串操作时会调用该函数
+<pre>
+class Person
+{
+    function __toString()
+    {
+        return '以字符的类型调用对象';
+    }
+}
+$p=new Person();
+echo $p;//以字符的类型调用对象
+</pre>
+>__sleep(),该函数将在序列化时自动调用
+__wakeup(),该函数将在反序列化时自动调用
+<pre>
+class User
+{
+    private $name;
+    private $age;
+    private $sex;
+    function __construct($pname,$page,$psex)
+    {
+        $this->name=$pname;
+        $this->age=$page;
+        $this->sex=$psex;
+    }
+    function __sleep()
+    {
+        return array('name','age','sex');
+    }
+    function __wakeup()
+    {
+        $this->name='Yue';
+    }
+}
+$user=new User('andy',22,'male');
+file_put_contents('info.txt',serialize($user));
+$str=file_get_contents('info.txt');
+$uu=unserialize($str);
+print_r($uu);//User Object ( [name:User:private] => Yue [age:User:private] => 22 [sex:User:private] => male )
+</pre>
+
+##final关键字
+如果父类中的方法被声明为final，则子类无法覆盖该方法。如果一个类被声明为final，则不能被继承。
+##对象复制
+对象的复制是通过关键字clone来实现的。用clone克隆出来的对象与原对象没有任何关系，它是把原来的对象从当前的位置重新复制了一份，也就是相当于在内存中新开辟了一块空间。
+<pre>
+class myClass{
+    public $data;
+}
+
+$sss ="aaa";
+$obj1 = new myClass();
+$obj1->data =$sss;
+$obj2 = clone $obj1;
+$obj2->data="bbb";
+
+print_r($obj1);//myClass Object ( [data] => aaa ) 
+print_r($obj2);//myClass Object ( [data] => bbb )
+</pre>
+##对象比较
+果两个对象的属性和属性值 都相等，而且两个对象是同一个类的实例，那么这两个对象变量相等。
+<pre>
+class Person
+{
+    public $name;
+    public $age;
+    public $sex;
+}
+
+$p1 = new Person();
+$p2 = new Person();
+$p1->name = 'xiao';
+$p2->name = 'xiao';
+$p1->age = 22;
+$p2->age = 22;
+$p1->sex = 'male';
+$p2->sex = 'male';
+echo(int)($p1 == $p2);//1
+$p2->age=20;
+echo(int)($p1 > $p2);//1
+</pre>
+##对象和引用
+
+
 
 
