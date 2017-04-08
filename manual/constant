@@ -98,7 +98,7 @@ class B extends A
 
 $b = new B();//B
 
-get_called()得到当前主调类的类名
+get_called_class()得到当前主调类的类名
 class A
 {
     function __construct()

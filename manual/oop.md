@@ -762,7 +762,42 @@ $p2->age=20;
 echo(int)($p1 > $p2);//1
 </pre>
 ##对象和引用
+PHP的引用相当于别名，使不同的变量可以指向相同的内容。PHP5以后对象变量已经不再将对象作为它的值，只是保存一个用来访问对象内容的标识符。当对象作为参数进行传递，赋值给另外一个变量，作为参数返回时，两个变量不是引用关系，而是保存同一个标识符的拷贝，指向相同的对象。
+<pre>
+class Foo
+{
+    private static $used;
+    private $id;
 
+    public function __construct()
+    {
+        $this->id = self::$used++;
+    }
+
+    public function __clone()
+    {
+        $this->id = self::$used++;
+    }
+}
+
+$a = new Foo();//$a指向Foo对象0
+$b = $a; // $a指向Foo对象0,$b是$a的一份拷贝
+$c = &$a; // $c 和 $a是 一个指向Foo对象0的两个引用(别名)
+$a = new Foo;// $c 和 $a 是一起指向Foo对象1的引用，$b依旧指向Foo对象0
+unset($a);//$a不存在，$c 指向Foo对象1的引用，$b指向Foo对象0
+$a =& $b;//$a 和 $b 一个指向Foo对象0的两个引用(别名)，$c 指向Foo对象1的
+$a = NULL;//$a 和 $b 一起指向NULL,Foo对象0被回收，$c 指向Foo对象1
+unset($b);//$a指向NULL， $b不存在，$c 指向Foo对象1
+$a=clone $c;//$a指向Foo对象2，$c 指向Foo对象1
+unset($c);//$c不存在，$a指向Foo对象2,Foo对象0被回收
+$c=$a;// $a指向Foo对象0,$c是$a的一份拷贝，$a 和 $c 一起指向2
+unset($a);//$a不存在，$c指向Foo对象2
+$a=&$c;// $c 和 $a是 一个指向Foo对象2的两个引用(别名)
+$a=null;//Foo对象2被回收，$c 和 $a是 一个指向null的两个引用(别名)
+</pre>
+
+##对象序列化
+所有php里面的值都可以使用函数serialize()来返回一个包含字节流的字符串来表示，unserialize()函数能够重新把字符串变会php原有的值。序列化一个对象，将会保存对象所有的变量，但是不会保存对象的方法，只会保留类的名字。
 
 
 
