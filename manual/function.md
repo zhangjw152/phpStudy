@@ -1,8 +1,11 @@
 #字符串函数
+##[chuck_spilt](#chuck_spilt)，[string_spilt](#string_spilt)，explode，preg_spilt以及wordwrap
+<span id="chuck_spilt"></span>
 * string chuck_spilt($sring body[,int $chucklen=76[,string $end="\r\n"]])将字符串分成小块
 <pre>
 echo chunk_split('hujkokoefhuhusjd',4);//hujk okoe fhuh usjd
 </pre>
+<span id="string_spilt"></span>
 * array string_spilt(string $body[,int spilt_length=1])将一个字符串转化为数组
 <pre>
 print_r(str_split('hello world',3));//Array ( [0] => hel [1] => lo [2] => wor [3] => ld )
@@ -38,6 +41,72 @@ $text = "A very long woooooooooooooooooord. and something";
 $newtext = wordwrap($text, 8, "\n", false);
 echo "$newtext\n";//A very long woooooooooooooooooord. and something
 </pre>
+* mixed count_chars(string $string[,int $mode=0]);统计string中每个字节值出现的次数
+<pre>
+$data = "Two Ts and one F.";
+foreach (count_chars($data, 1) as $i => $val) {
+   echo "There were $val instance(s) of \"" , chr($i) , "\" in the string.\n";
+}
+</pre>
+>输出:There were 4 instance(s) of " " in the string.
+    There were 1 instance(s) of "." in the string.
+    There were 1 instance(s) of "F" in the string.
+    There were 2 instance(s) of "T" in the string.
+    There were 1 instance(s) of "a" in the string.
+    There were 1 instance(s) of "d" in the string.
+    There were 1 instance(s) of "e" in the string.
+    There were 2 instance(s) of "n" in the string.
+    There were 2 instance(s) of "o" in the string.
+    There were 1 instance(s) of "s" in the string.
+    There were 1 instance(s) of "w" in the string.
+
+* int substr_count($haystack,$needle[,int $offset=0[,int $length]]) 统计$haystack中含有$needle的数目
+ <pre>
+ $text='this is a test';
+ echo substr_count($text,'is');//2
+ echo substr_count($text,'is',3);//1,实际是统计's is a test'中含有'is'个数
+ echo substr_count($text,'is',3,3);//0,实际是统计's i'中含有'is'个数
+ -------------------
+ $text2 = 'gcdgcdgcd';
+ echo substr_count($text2, 'gcdgcd');//输出1，因为函数不会计算重叠字符串
+ </pre>
+    
+* mixed strpos(string $haystack,mixed $needle[,int $offset=0]);返回$needle字符串在$haystack字符串中首次出现的位置，如果没有会返回false
+<pre>
+$str = 'abcde abcde';
+$needle = 'ab';
+$pos = strpos($str, $needle);
+if ($pos === false) {//在这里使用的是'==='而不可以使用'=='
+    echo $needle . ' not in ' . $str;
+} else {
+    echo $needle . ' in ' . $str;
+}//ab in abcde abcde
+-----------------------------
+$str = 'abcde abcde';
+$needle = 'ab';
+$pos = strpos($str, $needle,1);//忽视偏移量之前的字符进行查找
+echo $pos;//6
+-----------------------------
+//找多个字符串首次出现的位置
+function mulitStrpos($haystack, $needles, $offset = 0)
+{
+    $pos=array();
+    foreach ($needles as $needle) {
+        $pos[$needle]=strpos($haystack,$needle);
+    }
+    return $pos;
+}
+
+$text = 'dog,cat,wolf and mouse';
+$needles=['dog','wolf','bird'];
+print_r(mulitStrpos($text,$needles));//Array ( [dog] => 0 [wolf] => 8 [bird] => )
+</pre>
+* mixed stripos(string $haystack,string $needle[,int offset=0])查找字符串首次出现的位置(不区分大小写)
+<pre>
+$text='Abusa';
+echo stripos($text,'a');//0而不是4
+</pre>
+
 
 
 
