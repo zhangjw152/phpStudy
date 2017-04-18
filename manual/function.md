@@ -1,5 +1,5 @@
-#字符串函数
-##[chuck_spilt](#chuck_spilt)，[string_spilt](#string_spilt)，explode，preg_spilt以及wordwrap
+# 字符串函数
+## [chuck_spilt](#chuck_spilt)，[string_spilt](#string_spilt)，explode，preg_spilt以及wordwrap
 <span id="chuck_spilt"></span>
 * string chuck_spilt($sring body[,int $chucklen=76[,string $end="\r\n"]])将字符串分成小块
 <pre>
