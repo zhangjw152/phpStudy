@@ -1,6 +1,6 @@
 # 字符串函数
 ## [chuck_spilt](#chuck_spilt)，[string_spilt](#string_spilt)，[explode](#explode)，[preg_spilt](#preg_spilt)以及[wordwrap](#wordwrap)
-<span id="chuck_spilt">1</span>
+<h2 id="chuck_spilt">1</h2>
 * string chuck_spilt($sring body[,int $chucklen=76[,string $end="\r\n"]])将字符串分成小块
 <pre>
 echo chunk_split('hujkokoefhuhusjd',4);//hujk okoe fhuh usjd
@@ -10,7 +10,7 @@ echo chunk_split('hujkokoefhuhusjd',4);//hujk okoe fhuh usjd
 <pre>
 print_r(str_split('hello world',3));//Array ( [0] => hel [1] => lo [2] => wor [3] => ld )
 </pre>
-<span id="explode">11</span>
+<h2 id="explode">11</h2>
 * array explode(string $delimiter,string $string[,int limit])将字符串分割成数组
 <pre>
 $string='one|two|three|four';
@@ -33,7 +33,7 @@ print_r(multieExplode($delimiters,$text));//Array ( [0] => here is a sample [1] 
 <pre>
 print_r(preg_split("/[,\s]+/",'hypertext language, programming'));//Array ( [0] => hypertext [1] => language [2] => programming )
 </pre>
-<span id="wordwrap">1</span>
+<h2 id="wordwrap">1</h2>
 * string wordwrap (string $str [, int $width = 75 [, string $break = "\n" [, bool $cut = false ]]])打断字符串为指定数量的字串
 <pre>
 $text = "A very long woooooooooooord.";
