@@ -29,12 +29,12 @@ $delimiters=array(',',':','.','|');
 print_r(multieExplode($delimiters,$text));//Array ( [0] => here is a sample [1] => this text [2] => and this will be exploded [3] => this also [4] => this one too [5] => ) )
 </pre>
 <h4 id="preg_spilt"></h4>
-*array preg_spilt(string $patten,string $subject)通过一个正则表达式分隔字符串
+* array preg_spilt(string $patten,string $subject)通过一个正则表达式分隔字符串
 <pre>
 print_r(preg_split("/[,\s]+/",'hypertext language, programming'));//Array ( [0] => hypertext [1] => language [2] => programming )
 </pre>
 <h2 id="wordwrap"></h2>
-*string wordwrap (string $str [, int $width = 75 [, string $break = "\n" [, bool $cut = false ]]])打断字符串为指定数量的字串
+* string wordwrap (string $str [, int $width = 75 [, string $break = "\n" [, bool $cut = false ]]])打断字符串为指定数量的字串
 <pre>
 $text = "A very long woooooooooooord.";
 $newtext = wordwrap($text, 8, "\n", true);
@@ -109,7 +109,17 @@ print_r(mulitStrpos($text,$needles));//Array ( [dog] => 0 [wolf] => 8 [bird] => 
 $text='Abusa';
 echo stripos($text,'a');//0而不是4
 </pre>
-
-
+* int strrpos(string $haystack,string $needle[,int offset=0])返回指定字符串在目标字符串中最后一次出现的位置，offset为负值时，在倒数第几个字符的位置结束查找。
+<pre>
+$text='abcd abcd abcd';
+echo strrpos($text,'b');//11
+echo strrpos($text,'b',-3);//11，去掉末尾2个字符然后进行查找，相当于在abcd abcd ab中找
+echo strrpos($text,'b',-4);//6，去掉末尾3个字符然后进行查找，相当于在abcd abcd a中找
+</pre>
+* int strrpos(string $haystack,string $needle[,int offset=0])不区分大小写，返回指定字符串在目标字符串中最后一次出现的位置，offset为负值时，在倒数第几个字符的位置结束查找。
+<pre>
+$text='abcd abcd abcd';
+echo strripos($text,'Ab');//10
+</pre>
 
 
