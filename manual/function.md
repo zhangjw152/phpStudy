@@ -116,10 +116,10 @@ echo strrpos($text,'b');//11
 echo strrpos($text,'b',-3);//11，去掉末尾2个字符然后进行查找，相当于在abcd abcd ab中找
 echo strrpos($text,'b',-4);//6，去掉末尾3个字符然后进行查找，相当于在abcd abcd a中找
 </pre>
-* int strrpos(string $haystack,string $needle[,int offset=0])不区分大小写，返回指定字符串在目标字符串中最后一次出现的位置，offset为负值时，在倒数第几个字符的位置结束查找。
+* int strripos(string $haystack,string $needle[,int offset=0])不区分大小写，返回指定字符串在目标字符串中最后一次出现的位置，offset为负值时，在倒数第几个字符的位置结束查找。
 <pre>
 $text='abcd abcd abcd';
 echo strripos($text,'Ab');//10
 </pre>
-
+* string strstr(string $haystack,mixed $needle[,bool $before_needle=false])
 
