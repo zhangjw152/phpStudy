@@ -1,5 +1,5 @@
 # 字符串函数
-## [chuck_spilt](#chuck_spilt)，[string_spilt](#string_spilt)，[explode](#explode)，[preg_spilt](#preg_spilt)以及[wordwrap](#wordwrap)
+## 字符串的分割[chuck_spilt](#chuck_spilt)，[string_spilt](#string_spilt)，[explode](#explode)，[preg_spilt](#preg_spilt)以及[wordwrap](#wordwrap)
 <h2 id="chuck_spilt"></h2>
 * string chuck_spilt($sring body[,int $chucklen=76[,string $end="\r\n"]])将字符串分成小块
 <pre>
@@ -44,6 +44,8 @@ $text = "A very long woooooooooooooooooord. and something";
 $newtext = wordwrap($text, 8, "\n", false);
 echo "$newtext\n";//A very long woooooooooooooooooord. and something
 </pre>
+## 统计字符串中字符的数目[count_chars](#count_chars)，[substr_count](#substr_count)
+<h2 id="count_chars"></h2>
 * mixed count_chars(string $string[,int $mode=0]);统计string中每个字节值出现的次数
 <pre>
 $data = "Two Ts and one F.";
@@ -63,6 +65,7 @@ foreach (count_chars($data, 1) as $i => $val) {
     There were 1 instance(s) of "s" in the string.
     There were 1 instance(s) of "w" in the string.
 
+<h2 id="substr_count"></h2>
 * int substr_count($haystack,$needle[,int $offset=0[,int $length]]) 统计$haystack中含有$needle的数目
  <pre>
  $text='this is a test';
@@ -121,5 +124,78 @@ echo strrpos($text,'b',-4);//6，去掉末尾3个字符然后进行查找，相�
 $text='abcd abcd abcd';
 echo strripos($text,'Ab');//10
 </pre>
-* string strstr(string $haystack,mixed $needle[,bool $before_needle=false])
+* string strstr(string $haystack,mixed $needle[,bool $before_needle=false])返回$haystack字符串从$needle第一次出现的位置到$haystack结束的字符串。
+<pre>
+$email='name@example.com';
+echo strstr($email,'@');//example.com
+echo strstr($email,'@',true);//name
+</pre>
+* string stristr(string $haystack,mixed $needle[,bool $before_needle=false])strstr的忽略大小写的版本
+<pre>
+$email='USER@EXAMPLE.COM';
+echo stristr($email,'e');//ER@EXAMPLE.COM
+echo stristr($email,'e',true);//US
+</pre>
+* string strrchr(string $haystack,mixed $needle)该函数返回$haystack以$needle的最后出现位置开始，直到$haystack末尾
+<pre>
+$fileName='search.asp.php';
+echo strrchr($fileName,'.');//.php
+</pre>
+* string strpbrk(string $haystack,string $charlist)在$haystack字符串中查找$char_list中的字符，返回找到$haystack中第一个$char_list中的字符开头到$haystack结尾的字符串
+<pre>
+$text='This is a example text';
+$char_list='mi';
+echo strpbrk($text,$char_list);//is is a example text
+</pre>
+* string substr(string $haystack,int $start[,int $length])返回字符串$haystack由$start和$length参数指定的子字符串。
+<pre>
+$str='abcdefg';
+echo substr($str,1,3);//bcd
+echo substr($str,-2);//fg  $start为负值时，从倒数第n的值开始
+echo substr($str,1,-2);//bcde  $length为负值时，末尾的n的字符将会被忽略
+echo substr($str,-3,-1);//ef
+</pre>
+## 输入输出
+* echo (string $arg1[,string $...])不是函数，是一个语言结构，输出一个或多个字符串
+* print (string $arg1)和echo唯一区别是只可以输出一个字符串
+* printf(string $format[,mixed $args[,mixed $...]])依据format格式输出字符串
+<pre>
+$num=2.12;
+printf("%.1f",$num);//2.1
+</pre>
+* string sprintf(string $format[,mixed $args[,mixed $...]])依据format格式返回字符串
+<pre>
+$num=2.12;
+$str=sprintf("%.1f",$num);
+echo $str;//2.1
+</pre>
+* string vsprintf(string $format,array $agrs)依据format格式返回字符串，和sprintf函数类似，但是接收的参数是数组。
+<pre>
+$date='2017-4-22';
+$formatDate=vsprintf('%04d-%02d-%02d',explode('-',$date));
+echo $formatDate;//2017-04-22
+</pre>
+* mixed sscanf(string $str,string $format[,mixed &$...])根据指定的格式解析输入的字符
+<pre>
+list($series)=sscanf('SN/37767','SN/%d');
+list($month,$day,$year)=sscanf('January 01 2000','%s %d %d');
+echo 'Item '.$series.' is made at '.$year.substr($month,0,3).$day;//Item 37767 is made at 2000 Jan 1
+</pre>
+* mixed fscanf ( resource $handle , string $format [, mixed &$... ] )根据指定的格式解析文件中的字符
+<pre>
+$handle = fopen("users.txt", "r");
+while ($userinfo = fscanf($handle, "%s\t%s\t%s\n")) {
+    list ($name, $profession, $countrycode) = $userinfo;
+    echo $name;
+    echo PHP_EOL;
+}//javier hiroshi robert luigi
+fclose($handle);
+--------------------
+users.txt
+javier  argonaut    pe
+hiroshi sculptor    p
+robert  slacker us
+luigi   florist it
+</pre>
+
 
