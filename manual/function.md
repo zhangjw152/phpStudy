@@ -1,5 +1,5 @@
 # 字符串函数
-## 字符串的分割[chuck_spilt](#chuck_spilt)，[string_spilt](#string_spilt)，[explode](#explode)，[preg_spilt](#preg_spilt)以及[wordwrap](#wordwrap)
+## 字符串的分割[chuck_spilt](#chuck_spilt)，[string_spilt](#string_spilt)，[explode](#explode)，[implode](#implode)，[preg_spilt](#preg_spilt)以及[wordwrap](#wordwrap)
 <h2 id="chuck_spilt"></h2>
 * string chuck_spilt($sring body[,int $chucklen=76[,string $end="\r\n"]])将字符串分成小块
 <pre>
@@ -27,6 +27,15 @@ function multieExplode($delimiters, $str)
 $text="here is a sample: this text, and this will be exploded. this also | this one too :)";
 $delimiters=array(',',':','.','|');
 print_r(multieExplode($delimiters,$text));//Array ( [0] => here is a sample [1] => this text [2] => and this will be exploded [3] => this also [4] => this one too [5] => ) )
+</pre>
+<h4 id="implode"></h4>
+* string implode(string $glue,array $piece)
+    string implode(string $glue,array $piece)用$glue的值将一个一维数组合并成字符串
+<pre>
+$arr=array(1,23,45,4);
+$ids=implode(',',$arr);
+$sql="select * from TABLE  WHERE id IN ($ids)";
+echo $sql;//select * from TABLE WHERE id IN (1,23,45,4)
 </pre>
 <h4 id="preg_spilt"></h4>
 * array preg_spilt(string $patten,string $subject)通过一个正则表达式分隔字符串
@@ -196,6 +205,56 @@ javier  argonaut    pe
 hiroshi sculptor    p
 robert  slacker us
 luigi   florist it
+</pre>
+##字母大小写转换
+* string lcfirst(string $str)是字符串的第一个字符小写
+<pre>
+$str='Hello World';
+echo lcfirst($str);//hello World
+</pre>
+* string ucfirst(string $str)将字符串的第一个字符转化为大写
+<pre>
+$str='hello World';
+echo ucfirst($str);//Hello World
+</pre>
+* string ucwords(string $str[,srting $delimiters=" \t\r\n\f\v"])将字符串每个单词的首字符转化为大写，返回
+<pre>
+$str='hello world and hello you';
+echo ucwords($str);//Hello World And Hello You
+</pre>
+* string strtoupper(string $str)将字符串中所有字符转化为大写,并返回
+<pre>
+$str = "Mary Had A Little Lamb and She LOVED It So";
+echo strtoupper($str);//MARY HAD A LITTLE LAMB AND SHE LOVED IT SO
+</pre>
+* string strtolower(string $str)将字符串中所有字符转化为小写，并返回
+<pre>
+$str = "Mary Had A Little Lamb and She LOVED It So";
+echo strtolower($str);//mary had a little lamb and she loved it so
+</pre>
+##删除空字符
+* string ltrim(string $string[,string character_mask])删除字符串开头的空白字符
+<pre>
+$text = "\t\tThese are a few words :) ...  ";
+echo ltrim($text);//These are a few words :) ...
+</pre>
+* string rtrim(string $string[,string character_mask])删除字符串末端的空白字符
+<pre>
+$text="These are a few words  \t";
+echo rtrim($text);//These are a few words
+</pre>
+* string trim (string $string[,string character_mask])删除字符串收尾处的空白字符
+<pre>
+$text="   These are a few words  \t";
+echo rtrim($text);//These are a few words
+</pre>
+##number_format()
+* string number_format(float $number,int $decimal=0,string $dec_point=".",string $thousands_sep=",")以分隔符的方式格式化一个数字
+$number要格式化的数字；$decimals要保留的小数位数；$dec_point指定小数的分割字符，默认为'.'；$thousands_sep指定千分位的分割字符，默认为','
+<pre>
+$num=12345.67;
+echo number_format($num,3);//12,345.670
+echo number_format($num,3,',','.');//12.345,670
 </pre>
 
 
