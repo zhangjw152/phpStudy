@@ -256,5 +256,28 @@ $num=12345.67;
 echo number_format($num,3);//12,345.670
 echo number_format($num,3,',','.');//12.345,670
 </pre>
+##ord和chr
+int ord(string $string)返回字符串$string字符串的第一个字符的ASCII码
+<pre>
+$str='1234';
+echo ord($str);//49
+</pre>
+string chr(int $ascii)返回ASCII码对应的字符
+<pre>
+$str=49;
+echo chr($str);//1
+</pre>
+##格式解析
+* void parse_str(string $str[,array &$arr])将字符串解析成多个变量，如果设置第二个参数$arr,变量会以数组元素的形式存入数组，作为替代。
+<pre>
+$str='first=value&arr[]=apple+pear&arr[]=banana';
+parse_str($str);//value
+echo $first;
+print_r($arr);//Array ( [0] => apple pear [1] => banana )
+parse_str($str,$output);
+print_r($output);//Array ( [first] => value [arr] => Array ( [0] => apple pear [1] => banana ) )
+</pre>
+
+
 
 
