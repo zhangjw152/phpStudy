@@ -81,7 +81,7 @@ foreach (count_chars($data, 1) as $i => $val) {
  echo substr_count($text,'is');//2
  echo substr_count($text,'is',3);//1,实际是统计's is a test'中含有'is'个数
  echo substr_count($text,'is',3,3);//0,实际是统计's i'中含有'is'个数
- -------------------
+ |-------------------|
  $text2 = 'gcdgcdgcd';
  echo substr_count($text2, 'gcdgcd');//输出1，因为函数不会计算重叠字符串
  </pre>
@@ -96,12 +96,12 @@ if ($pos === false) {//在这里使用的是'==='而不可以使用'=='
 } else {
     echo $needle . ' in ' . $str;
 }//ab in abcde abcde
------------------------------
+|-----------------------------|
 $str = 'abcde abcde';
 $needle = 'ab';
 $pos = strpos($str, $needle,1);//忽视偏移量之前的字符进行查找
 echo $pos;//6
------------------------------
+|-----------------------------|
 //找多个字符串首次出现的位置
 function mulitStrpos($haystack, $needles, $offset = 0)
 {
@@ -111,11 +111,11 @@ function mulitStrpos($haystack, $needles, $offset = 0)
     }
     return $pos;
 }
-
 $text = 'dog,cat,wolf and mouse';
 $needles=['dog','wolf','bird'];
 print_r(mulitStrpos($text,$needles));//Array ( [dog] => 0 [wolf] => 8 [bird] => )
 </pre>
+
 * mixed stripos(string $haystack,string $needle[,int offset=0])查找字符串首次出现的位置(不区分大小写)
 <pre>
 $text='Abusa';
@@ -199,7 +199,7 @@ while ($userinfo = fscanf($handle, "%s\t%s\t%s\n")) {
     echo PHP_EOL;
 }//javier hiroshi robert luigi
 fclose($handle);
---------------------
+|--------------------|
 users.txt
 javier  argonaut    pe
 hiroshi sculptor    p
@@ -232,6 +232,7 @@ echo strtoupper($str);//MARY HAD A LITTLE LAMB AND SHE LOVED IT SO
 $str = "Mary Had A Little Lamb and She LOVED It So";
 echo strtolower($str);//mary had a little lamb and she loved it so
 </pre>
+
 ##删除空字符
 * string ltrim(string $string[,string character_mask])删除字符串开头的空白字符
 <pre>
@@ -248,6 +249,7 @@ echo rtrim($text);//These are a few words
 $text="   These are a few words  \t";
 echo rtrim($text);//These are a few words
 </pre>
+
 ##number_format()
 * string number_format(float $number,int $decimal=0,string $dec_point=".",string $thousands_sep=",")以分隔符的方式格式化一个数字
 $number要格式化的数字；$decimals要保留的小数位数；$dec_point指定小数的分割字符，默认为'.'；$thousands_sep指定千分位的分割字符，默认为','
@@ -267,7 +269,8 @@ string chr(int $ascii)返回ASCII码对应的字符
 $str=49;
 echo chr($str);//1
 </pre>
-##格式解析
+
+##数组解析
 * void parse_str(string $str[,array &$arr])将字符串解析成多个变量，如果设置第二个参数$arr,变量会以数组元素的形式存入数组，作为替代。
 <pre>
 $str='first=value&arr[]=apple+pear&arr[]=banana';
@@ -276,6 +279,42 @@ echo $first;
 print_r($arr);//Array ( [0] => apple pear [1] => banana )
 parse_str($str,$output);
 print_r($output);//Array ( [first] => value [arr] => Array ( [0] => apple pear [1] => banana ) )
+</pre>
+
+* string http_build_query(mixed $queyr_data[,string $numeric_prefix[,string $arg_separator[,int $enc_type=PHP_QUERY_RFC1738]]])生成URL-encode之后的请求字符串
+query_data可以是数组或包含属性的对象。
+numeric_prefix此参数值将会作为基础数组中的数字下标元素的前缀。
+arg_separator作为分隔参数。
+<pre>
+$data = array('foo' => 'bar',
+    'baz' => 'boom',
+    'cow' => 'milk',
+    'php'=>'hypertext processor');
+echo http_build_query($data);//foo=bar&baz=boom&cow=milk&php=hypertext+processor
+|--------------------|
+$data=array('foo','bar','baz','boom','cow'=>'milk','php'=>'hypertext processor');
+echo http_build_query($data,'myvar_');//myvar_0=foo&myvar_1=bar&myvar_2=baz&myvar_3=boom&cow=milk&php=hypertext+processor
+|---------------------|
+$fruit=array('apple'=>array('red','yellow'),'orange');
+echo http_build_query($fruit,'flags_');//apple%5B0%5D=red&apple%5B1%5D=yellow&flags_0=orange
+</pre>
+
+## 字符串编解码
+string urlencode(string $str)编码URL字符串
+string urldecode(string $str)解码已编码的URL字符串
+<pre>
+$ChineseName="我的名字";
+$encodeStr=urlencode($ChineseName);
+echo "<a href=/cgi/personal.cgi?name=$encodeStr>我的名字</a>";//将中文参数进行编码否则会导致乱码
+$DecodeStr=urldecode($_GET['name']);//错误，浏览器会自动解码，不需手动解码
+$DecodeStr=$_GET['name'];//正确，浏览器会自动解码 
+</pre>
+
+## 路径解析
+* mixed parse_url(string $url[,int $component=-1])解析URL，返回器组成部分
+<pre>
+$url = 'http://username:password@hostname/path?arg=value#anchor';
+print_r(parse_url($url));//Array ( [scheme] => http [host] => hostname [user] => username [pass] => password [path] => /path [query] => arg=value [fragment] => anchor )
 </pre>
 
 
