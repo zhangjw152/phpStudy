@@ -317,6 +317,43 @@ $url = 'http://username:password@hostname/path?arg=value#anchor';
 print_r(parse_url($url));//Array ( [scheme] => http [host] => hostname [user] => username [pass] => password [path] => /path [query] => arg=value [fragment] => anchor )
 </pre>
 
+* mixed pathinfo(string $path[,int $option=PATHINFO_DIRNAME | PATHINFO_BASENAME | PATHINFO_EXTENSION | PATHINFO_FILENAME ])
+<pre>
+$path_parts = pathinfo('/www/htdocs/inc/lib.inc.php');
+print_r($path_parts);//Array ( [dirname] => /www/htdocs/inc [basename] => lib.inc.php [extension] => php [filename] => lib.inc )
+|-----------|
+$path_parts = pathinfo('/www/htdocs/inc/lib');
+print_r($path_parts);//Array ( [dirname] => /www/htdocs/inc [basename] => lib [filename] => lib )
+</pre>
 
+* string dirname(string $path)返回路径中的目录部分
+<pre>
+echo dirname(__FILE__);//给出当前文件所在目录
+</pre>
 
+* string basename(string $path[,$suffix])返回路径中的文件名部分，如果文件名是以$suffix结尾的，那么这一部分也会被去掉。
+<pre>
+echo basename("/etc/sudoers.d", ".d");//sudoers
+</pre>
 
+## 字符串替换
+* mixed str_replace(mixed $search,mixed $replace,mixed $subject[,int &$count])子字符串替换，返回一个字符串或者数组。字符串或者数组是将subject中全部的search被replace替换之后的结果
+<pre>
+$phrase  = "You should eat fruits, and fiber every day.";
+$healthy = array("fruits", "vegetables", "fiber");
+$yummy   = array("pizza", "beer", "ice cream");
+
+$newphrase = str_replace($healthy, $yummy, $phrase);
+echo $newphrase;//You should eat pizza, and ice cream every day.
+|-----------|
+$str=str_replace("ll","","good golly miss molly!",$count);
+echo $str;//good goy miss moy!
+echo $count;//2
+|------------|
+//str_replace()的替换时从左到右依次进行的，进行多重替换的时候可能会替换掉之前插入的值
+$letters=array('a','p');
+$fruit=array('apple','pear');
+$text='a p';
+$output=str_replace($letters,$fruit,$text);
+echo $output;//apearpearle pear,apple中的p被pear代替
+</pre>
