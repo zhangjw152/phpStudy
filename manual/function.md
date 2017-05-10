@@ -454,4 +454,61 @@ echo rand(5,15);//6
 
 ## 字符串比较
 
-## 正则函数
+* int strcmp(string $str1,string $str2)二进制安全字符串比较。str1小于str2返回<0，str1大于str2返回>2,相等返回0
+<pre>
+echo strcmp('hello','Hello');//32
+echo strcmp('Hello','hello');//-32
+</pre>
+
+* int strncmp(string $str1,string $str2,int $len)二进制安全比较字符串开头的若干字符。str1小于str2返回<0，str1大于str2返回>2,相等返回0
+<pre>
+echo strncmp('hello world','hello php',6);//0
+</pre>
+
+* int strcasecmp(string $str1,string $str2)二进制安全比较字符串(不区分大小写)。str1小于str2返回<0，str1大于str2返回>2,相等返回0
+<pre>
+echo strcasecmp('Hello','hello');//0
+</pre>
+
+* int strncasecmp(string $str1,string $str2,int $len)二进制安全比较字符串开头的若干字符(不区分大小写)。str1小于str2返回<0，str1大于str2返回>2,相等返回0
+<pre>
+echo strncasecmp('Hello world','hello php',6);//0
+</pre>
+
+* int substr_compare(string $main_str,string $str,int $offset[,int length[,bool case_insensitivity=false]])从偏移位置offset开始比较main_str与str，比较长度为length个字符
+如果mai_str从偏移位置offset起的子字符串小于str返回小于0的数，大于str返回大于0的数，等于str返回0
+<pre>
+echo substr_compare("abcde", "bc", 1, 2); // 0
+echo substr_compare("abcde", "de", -2, 2); // 0
+echo substr_compare("abcde", "bcg", 1, 2); // 0
+echo substr_compare("abcde", "BC", 1, 2, true); // 0
+echo substr_compare("abcde", "bc", 1, 3); // 1
+echo substr_compare("abcde", "cd", 1, 2); // -1
+</pre>
+
+# 数组函数
+* array array_change_key_case(arrat $array[,int $case=CASE_LOWER])将数组中的全部键名修改为大写或小写
+<pre>
+$arr=array("FirSt"=>1,'SecoNd'=>4);
+$new_arr=array_change_key_case($arr,CASE_UPPER);
+print_r($new_arr);//Array ( [FIRST] => 1 [SECOND] => 4 )
+</pre>
+
+## 数组分割
+* array array_chunk(array $array,int $size[,bool $preserve_keys=false])将一个数组分成多个，每个数组的单元数目由size决定，$preserve_keys为true则会保留原有的键名
+<pre>
+$input_array=array('a','b','c','d','e','f','g');
+print_r(array_chunk($input_array,2,false));Array ( [0] => Array ( [0] => a [1] => b ) [1] => Array ( [0] => c [1] => d ) [2] => Array ( [0] => e [1] => f ) [3] => Array ( [0] => g ) )
+print_r(array_chunk($input_array,2,true));Array ( [0] => Array ( [0] => a [1] => b ) [1] => Array ( [2] => c [3] => d ) [2] => Array ( [4] => e [5] => f ) [3] => Array ( [6] => g ) )
+</pre>
+
+* array array_slice(array $array,int $offset[,int $length=null[,bool $preserve_keys=false]])返回根据offset和lenth参数指定的array数组中的一段序列，$preserve_keys为true则会保留原有的键名
+<pre>
+$input_array=array('a','b','c','d','e','f','g');
+print_r(array_slice($input_array,2,-1));//Array ( [0] => c [1] => d [2] => e [3] => f )
+print_r(array_slice($input_array,2,-1,true));//Array ( [2] => c [3] => d [4] => e [5] => f )
+</pre>
+
+
+
+
