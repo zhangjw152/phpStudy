@@ -1,5 +1,5 @@
 # 字符串函数
-## 字符串的分割[chuck_spilt](#chuck_spilt)，[string_spilt](#string_spilt)，[explode](#explode)，[implode](#implode)，[preg_spilt](#preg_spilt)以及[wordwrap](#wordwrap)
+## 字符串的分割[chuck_spilt](#chuck_spilt)，[string_spilt](#string_spilt)，[explode](#explode)，[implode](#implode)，[preg_spilt](#preg_spilt)，[wordwrap](#wordwrap)以及[strtok](#strtok)
 <h2 id="chuck_spilt"></h2>
 * string chuck_spilt($sring body[,int $chucklen=76[,string $end="\r\n"]])将字符串分成小块
 <pre>
@@ -53,7 +53,27 @@ $text = "A very long woooooooooooooooooord. and something";
 $newtext = wordwrap($text, 8, "\n", false);
 echo "$newtext\n";//A very long woooooooooooooooooord. and something
 </pre>
-## 统计字符串中字符的数目[count_chars](#count_chars)，[substr_count](#substr_count)
+
+* string strtok(string $str,string $token)
+  string strtok(string $token)将字符串str分割为若干个子字符串，每个字符串以token中的字符分割，仅第一次调用strtok是使用str参数，后来每次调用strtok值使用token参数
+<pre>
+$string = "This is\tan example\nstring";
+/* 使用制表符和换行符作为分界符 */
+$tok = strtok($string, " \n\t");
+
+while ($tok !== false) {
+    echo "Word=$tok<br />";
+    $tok = strtok(" \n\t");
+}
+结果为：
+Word=This
+Word=is
+Word=an
+Word=example
+Word=string
+</pre>
+
+## 统计字符串中字符的数目[count_chars](#count_chars)，[substr_count](#substr_count)，[str_word_count](#str_word_countt)
 <h2 id="count_chars"></h2>
 * mixed count_chars(string $string[,int $mode=0]);统计string中每个字节值出现的次数
 <pre>
@@ -85,6 +105,19 @@ foreach (count_chars($data, 1) as $i => $val) {
  $text2 = 'gcdgcdgcd';
  echo substr_count($text2, 'gcdgcd');//输出1，因为函数不会计算重叠字符串
  </pre>
+ 
+ <h2 id="str_word_count"></h2>
+ mixed str_word_count(string $string[,int $format=0[,string $charlist]])返回字符串中单词的使用情况
+ format：0返回单词的数量
+        1返回一个包含string中全部单词的数组
+        2返回关联数组。数组的键是单词在string中出现的数值位置，数组的值是这个单词
+<pre>
+$str='hello fri3end, you are looking    good today';
+print_r(str_word_count($str));//8
+print_r(str_word_count($str,1));//Array ( [0] => hello [1] => fri [2] => end [3] => you [4] => are [5] => looking [6] => good [7] => today
+</pre>
+   
+## 字符串中的位置   
     
 * mixed strpos(string $haystack,mixed $needle[,int $offset=0]);返回$needle字符串在$haystack字符串中首次出现的位置，如果没有会返回false
 <pre>
@@ -338,6 +371,7 @@ echo basename("/etc/sudoers.d", ".d");//sudoers
 
 ## 字符串替换
 * mixed str_replace(mixed $search,mixed $replace,mixed $subject[,int &$count])子字符串替换，返回一个字符串或者数组。字符串或者数组是将subject中全部的search被replace替换之后的结果
+str_ireplace不区分大小写
 <pre>
 $phrase  = "You should eat fruits, and fiber every day.";
 $healthy = array("fruits", "vegetables", "fiber");
@@ -357,3 +391,67 @@ $text='a p';
 $output=str_replace($letters,$fruit,$text);
 echo $output;//apearpearle pear,apple中的p被pear代替
 </pre>
+
+* mixed substr_replace(mixed $string,mixed $replacement,mixed $start[,mixed $length])替换字符串中的子串
+<pre>
+$var = 'ABCDEFGH:/MNRPQR/';
+echo substr_replace($var,'bob',10,-1);//$var = 'ABCDEFGH:/bob/';
+</pre>
+
+* string strtr(string $str,string $from,string $to)
+string strtr(string $str,array $replace_pairs)转换指定字符串
+<pre>
+echo strtr('hello','e','de');//hdllo如果from和to长度不相等，那么多余的字符部分将被忽略
+|——————————|
+$trans = array("hello" => "hi", "hi" => "hello");
+echo strtr("hi all, I said hello", $trans);//hello all, I said hi
+</pre>
+
+## 数组填充扩展
+* stirng str_pad(string input,int $pad_length[,string $pad_string=''[,int $pad_type=STR_PAD_RIGHT]])使用另外一个字符串填充字符串为指定长度
+<pre>
+echo str_pad('input',10);//'input       '
+echo str_pad('input',10,'p',STR_PAD_BOTH);//ppinputppp
+</pre>
+
+* string str_repeat(string $input,int $multiplier)返回$input重复multiplier次后的结果
+<pre>
+echo str_repeat("-=", 10);//-=-=-=-=-=-=-=-=-=-=
+</pre>
+
+## 随机打乱
+* string str_shuffle(string $str)随机打乱一个字符串
+<pre>
+$str='abcdef';
+$shuffled=str_shuffle($str);
+echo $shuffled;//dcafbe
+</pre>
+
+* bool shuffle(array &$array)打乱数组
+<pre>
+$numbers=range(1,20);
+shuffle($numbers);
+print_r($numbers);//Array ( [0] => 13 [1] => 1 [2] => 18 [3] => 3 [4] => 20 [5] => 14 [6] => 2 [7] => 17 [8] => 9 [9] => 12 [10] => 7 [11] => 8 [12] => 11 [13] => 15 [14] => 4 [15] => 5 [16] => 10 [17] => 6 [18] => 16 [19] => 19 )
+|---------------|
+当数组是key=>value格式的时候
+function shuffle_assoc(&$array)
+{
+    $keys = array_keys($array);
+    shuffle($keys);
+    foreach ($keys as $key) {
+        $new[$key]=$array[$key];
+    }
+    $array=$new;
+    return true;
+}
+</pre>
+
+* rand产生一个随机整数
+<pre>
+echo rand();//1827969608
+echo rand(5,15);//6
+</pre>
+
+## 字符串比较
+
+## 正则函数
