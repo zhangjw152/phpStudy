@@ -509,6 +509,156 @@ print_r(array_slice($input_array,2,-1));//Array ( [0] => c [1] => d [2] => e [3]
 print_r(array_slice($input_array,2,-1,true));//Array ( [2] => c [3] => d [4] => e [5] => f )
 </pre>
 
+* array array_column(array $input,mixed $column_key[,mixed $index_key=null])返回$input数组中键值为column_key的列,并用index_key作为键值
+<pre>
+$records = array(
+    array(
+        'id' => 2135,
+        'first_name' => 'John',
+        'last_name' => 'Doe',
+    ),
+    array(
+        'id' => 3245,
+        'first_name' => 'Sally',
+        'last_name' => 'Smith',
+    ),
+    array(
+        'id' => 5342,
+        'first_name' => 'Jane',
+        'last_name' => 'Jones',
+    ),
+    array(
+        'id' => 5623,
+        'first_name' => 'Peter',
+        'last_name' => 'Doe',
+    )
+);
+$last_name=array_column($records,'last_name','id');
+$last_name1=array_column($records,'last_name');
+print_r($last_name);//Array ( [2135] => Doe [3245] => Smith [5342] => Jones [5623] => Doe )
+print_r($last_name1);//Array ( [0] => Doe [1] => Smith [2] => Jones [3] => Doe )
+</pre>
 
+## 数组合并
+* array array_combine(array $keys,array $values)返回一个array，用来自keys数组中的值作为键名，来自values中的值作为相应的值
+<pre>
+$keys=array('green','red','yellow');
+$values=array('avocado','apple','banana');
+$ret=array_combine($keys,$values);
+print_r($ret);//Array ( [green] => avocado [red] => apple [yellow] => banana )
+</pre>
 
+* array array_merge(array $array1[,array $...])将一个或多个数组元素合并起来，作为结果返回，如果有相同的字符串键名，该键名后面的值将覆盖前面的值；相同的数字键名将不会覆盖，而是附在后面，并以连续方式重新索引
+<pre>
+$array1=array('color'=>'red',2,4);
+$array2=array('a','b','color'=>'green','shape'=>'trapezoid',4);
+$result=array_merge($array1,$array2);
+print_r($result);//Array ( [color] => green [0] => 2 [1] => 4 [2] => a [3] => b [shape] => trapezoid [4] => 4 )
+</pre>
 
+* array_merge和+的区别：
+键名为数字的数组合并时，array_merge将键名以连续的方式重新索引，+只是将后面的数组附加到前面的数组，两个数组有相同键名时，第一个数组中的同键名元素将会被保留，第二个数组中的元素将会被忽略
+<pre>
+$array1=array(0=>'zero_a',2=>'two_a',3=>'three_a');
+$array2=array(1=>'one_b',3=>'three_b',4=>'four_b');
+print_r(array_merge($array1,$array2));//Array ( [0] => zero_a [1] => two_a [2] => three_a [3] => one_b [4] => three_b [5] => four_b )
+print_r($array1+$array2);//Array ( [0] => zero_a [2] => two_a [3] => three_a [1] => one_b [4] => four_b )
+</pre>
+
+## 数组统计
+* array array_count_values(array $array)返回一个数组，键是array里元素的值，值是array元素的值出现的次数。
+<pre>
+$array=array(1,'hello','world',1,'world');
+print_r(array_count_values($array));//Array ( [1] => 2 [hello] => 1 [world] => 2 )
+</pre>
+
+* int count(mixed $srray_or_countable[,int $mode=COUNT_NORMAL])统计出数组里的所有元素的数量或者对象里的东西，如果mode参数设置为COUNT_RECURSIVE,count()将递归地对数组计数，对计算多维数组单元尤其有用
+<pre>
+$food = array('fruit' => array('apple', 'orange', 'banana'), 'vegetable' => array('carrot','pea','collard'));
+print_r(count($food));//2
+print_r(count($food,COUNT_RECURSIVE));//8
+</pre>
+
+当用于循环的时候，将数组的个数赋给一个变量会更好
+<pre>
+for($i=0;$i<count($array);$i++)//✘
+$arr_lenth=count($array);
+for($i=0;$i<$array_lenth;$i++)//√
+</pre>
+
+* array array_unique(array $array[,int sort_flag=SORT_STRING])移除数组中重复元素，对每个值只保留第一个遇到的键名
+<pre>
+$input=array('a'=>'green','red','b'=>'green','blue','red');
+print_r(array_unique($input));//Array ( [a] => green [0] => red [1] => blue )
+</pre>
+
+## 返回数组键名键值
+* array array_keys(array $array[,$search_value=null[,bool $strict=false]])返回input数组中的键名。如果指定了search_value，只返回该值的键名
+<pre>
+$array1 = array(0 => 100, 'color' => 'red');
+$array2 = array('blue', 'red', 'green', 'blue', 'blue');
+print_r(array_keys($array1));//Array ( [0] => 0 [1] => color ) 
+print_r(array_keys($array2, 'blue'));//Array ( [0] => 0 [1] => 3 [2] => 4 )
+</pre>
+
+* array array_values(array $array)返回数组中所有值并给其建立数字索引
+<pre>
+$a = array(3 => 11, 1 => 22, 2 => 33);
+$a[0] = 44;
+print_r(array_values($a));//Array ( [0] => 11 [1] => 22 [2] => 33 [3] => 44 )
+</pre>
+
+## 数组的差集
+* array array_diff(array $array1,array $array2[,array $...])对比array1和其他一个或者多个数组，返回在array1中但不在其他array里的值。
+<pre>
+$array1=array('a'=>'green','red','blue','red');
+$array2=array('b'=>'green','yellow','red');
+print_r(array_diff($array1,$array2));//Array ( [1] => blue )
+</pre>
+
+* array array_diff_assoc(array $array1,array $array2[,array $...])返回一个数组，该数组包含了所有在array1中但是不在任何其他参数数组中的值，键名也用于比较
+<pre>
+$array1 = array('a' => 'green', 'b' => 'brown', 'c' => 'blue', 'red');
+$array2 = array('a'=>'green','yelloe','red');
+print_r(array_diff_assoc($array1,$array2));//Array ( [b] => brown [c] => blue [0] => red )
+</pre>
+
+* array array_diff_key(array $array1,array $array2[,array $...])使用键名来比较$array1和$array2,返回在array1中出现但未出现在其他参数数组中的键名的值。
+<pre>
+$array1 = array('blue'  => 1, 'red'  => 2, 'green'  => 3, 'purple' => 4);
+$array2 = array('green' => 5, 'blue' => 6, 'yellow' => 7, 'cyan'   => 8);
+print_r(array_diff_key($array1,$array2));//Array ( [red] => 2 [purple] => 4 )
+</pre>
+
+* array array_udiff(array $array1,array $array2[,array $...],callable $value_compare_func)用回调函数比较数据，计算数组的不同。
+<pre>
+$array1 = array(new stdclass, new stdclass, new stdclass, new stdclass,);
+$array2 = array(new stdclass, new stdclass,);
+$array1[0]->width=11;$array1[0]->length=3;
+$array1[1]->width=7;$array1[1]->length=1;
+$array1[2]->width=2;$array1[2]->length=9;
+$array1[3]->width=5;$array1[3]->length=7;
+
+$array2[0]->width=7;$array2[0]->length=5;
+$array2[1]->width=9;$array2[1]->length=2;
+
+function compare_by_area($a,$b){
+    $areaA=$a->width*$a->length;
+    $areaB=$b->width*$b->length;
+
+    if($areaA<$areaB){
+        return -1;
+    }elseif ($areaA>$areaB){
+        return 1;
+    }else{
+        return 0;
+    }
+}
+print_r(array_udiff($array1,$array2,'compare_by_area'));//Array ( [0] => stdClass Object ( [width] => 11 [length] => 3 ) [1] => stdClass Object ( [width] => 7 [length] => 1 ) )
+</pre>
+
+## 数组的交集
+* array array_intersect(array $array1,array $array2[,array $...])计算数组的交集，所有在array1出现也在其他参数数组中出现的值。
+<pre>
+
+</pre>
