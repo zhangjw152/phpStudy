@@ -581,9 +581,9 @@ print_r(count($food,COUNT_RECURSIVE));//8
 
 当用于循环的时候，将数组的个数赋给一个变量会更好
 <pre>
-for($i=0;$i<count($array);$i++)//✘
+for($i=0;$i< count($array);$i++)//✘
 $arr_lenth=count($array);
-for($i=0;$i<$array_lenth;$i++)//√
+for($i=0;$i< $array_lenth;$i++)//√
 </pre>
 
 * array array_unique(array $array[,int sort_flag=SORT_STRING])移除数组中重复元素，对每个值只保留第一个遇到的键名
@@ -660,5 +660,22 @@ print_r(array_udiff($array1,$array2,'compare_by_area'));//Array ( [0] => stdClas
 ## 数组的交集
 * array array_intersect(array $array1,array $array2[,array $...])计算数组的交集，所有在array1出现也在其他参数数组中出现的值。
 <pre>
-
+$array1=array('a'=>'green','red','blue');
+$array2=array('b'=>'green','yellow','red');
+print_r(array_intersect($array1,$array2));//Array ( [a] => green [0] => red )
 </pre>
+
+* array array_intersect_assoc(array $array1,array $array2[,array $...])带索引检查计算数组的交集
+<pre>
+$array1 = array("a" => "green", "b" => "brown", "c" => "blue", "red");
+$array2 = array("a" => "green", "b" => "yellow", "blue", "red");
+print_r(array_intersect_assoc($array1,$array2));//Array ( [a] => green )
+</pre>
+
+* array array_intersect_key(array $array1,array $array2[,array $...])使用键名比较计算数组的交集
+<pre>
+$array1 = array('blue'  => 1, 'red'  => 2, 'green'  => 3, 'purple' => 4);
+$array2 = array('green' => 5, 'blue' => 6, 'yellow' => 7, 'cyan'   => 8);
+print_r(array_intersect_key($array1,$array2));//Array ( [blue] => 1 [green] => 3 )
+</pre>
+
