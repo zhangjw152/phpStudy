@@ -679,3 +679,67 @@ $array2 = array('green' => 5, 'blue' => 6, 'yellow' => 7, 'cyan'   => 8);
 print_r(array_intersect_key($array1,$array2));//Array ( [blue] => 1 [green] => 3 )
 </pre>
 
+## 数组填充
+* array array_fill(int $start_index,int $num,mixed $value)用value参数的值，将一个数组填充num个条目，键名由start_index参数指定的开始。
+<pre>
+print_r(array_fill(5,6,'banana'));//Array ( [5] => banana [6] => banana [7] => banana [8] => banana [9] => banana [10] => banana ) 
+print_r(array_fill(-2,3,'pear'));//Array ( [-2] => pear [0] => pear [1] => pear )
+</pre>
+
+* array array_fill_keys(array $keys,mixed $value)使用keys数组的值作为键，value参数的值作为值来填充一个数组
+<pre>
+$keys=array('foo',5,10,'bar');
+print_r(array_fill_keys($keys,'banaba'));//Array ( [foo] => banaba [5] => banaba [10] => banaba [bar] => banaba )
+</pre>
+
+## 数组回调
+* array array_filter(array $array[,callable $callback[,int $flag=0]])用回调函数过滤数组中的单元，依次将数组中的每个值传递给callback函数，如果callback函数返回true，则数组当前值包含在返回数组中
+<pre>
+|------------一个参数--------------|
+$entry = array('foo', false, -1, null, '');
+print_r(array_filter($entry));//Array ( [0] => foo [2] => -1 )
+function odd($var)
+{
+    return ($var & 1);
+}
+|------------两个参数--------------|
+$num = array('a' => 1, 'b' => 2, 'c' => 3, 'd' => 4, 'e' => 5);
+print_r(array_filter($num, 'odd'));//Array ( [a] => 1 [c] => 3 [e] => 5 )
+|------------三个参数--------------|
+print_r(array_filter($num, function ($k) {
+    return $k == 'b';
+}, ARRAY_FILTER_USE_KEY));//Array ( [b] => 2 )
+print_r(array_filter($num, function ($v, $k) {
+    return $k == 'b' || $v == 4;
+}, ARRAY_FILTER_USE_BOTH));// Array ( [b] => 2 [d] => 4 )
+</pre>
+
+* array array_map(callable $callback,array $array1[,array $...])返回$array1每个元素应用callback函数之后的数组
+<pre>
+|--------两个参数----------|
+$func = function ($value) {
+    return $value * 2;
+};
+print_r(array_map($func, range(1, 5)));//Array ( [0] => 2 [1] => 4 [2] => 6 [3] => 8 [4] => 10 )
+|--------三个参数----------|
+function show_spanish($n, $m)
+{
+    return("The number $n is called $m in Spanish");
+}
+$num=range(1,4);
+$b = array("uno", "dos", "tres", "cuatro", "cinco");
+print_r(array_map('show_spanish',$num,$b));//Array ( [0] => The number 1 is called uno in Spanish [1] => The number 2 is called dos in Spanish [2] => The number 3 is called tres in Spanish [3] => The number 4 is called cuatro in Spanish [4] => The number is called cinco in Spanish )
+当后面数组的个数不一致时，会扩展短的数组，知道长度和最长的数组一样。
+|--------三个参数----------|
+$a = array(1, 2, 3, 4, 5);
+$b = array("one", "two", "three", "four", "five");
+$c = array("uno", "dos", "tres", "cuatro", "cinco");
+
+$d = array_map(null, $a, $b, $c);
+print_r($d);//Array ( [0] => Array ( [0] => 1 [1] => one [2] => uno ) [1] => Array ( [0] => 2 [1] => two [2] => dos ) [2] => Array ( [0] => 3 [1] => three [2] => tres ) [3] => Array ( [0] => 4 [1] => four [2] => cuatro ) [4] => Array ( [0] => 5 [1] => five [2] => cinco ) )
+当null作为回调函数时，将创建多维数组
+</pre>
+
+
+
+
