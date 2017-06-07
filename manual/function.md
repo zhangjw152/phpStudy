@@ -740,6 +740,46 @@ print_r($d);//Array ( [0] => Array ( [0] => 1 [1] => one [2] => uno ) [1] => Arr
 当null作为回调函数时，将创建多维数组
 </pre>
 
+* mixed array_reduce(array $array,callable $callback[,mixed initial=null])将回调函数callback迭代的作用到array数组中的每一个单元中，从而将数组简化为单一的值。callback(mixed $carry,mixed $item)$carry 携带上次迭代里的值，如果本次迭代是第一次，那么这个值是initial。
+<pre>
+function sum($carry, $item)
+{
+    $carry += $item;
+    return $carry;
+}
 
+function product($carry, $item)
+{
+    $carry *= $item;
+    return $carry;
+}
+$a=array(1,2,3,4,5);
+$x=array();
+print_r(array_reduce($a,'sum'));//15
+print_r(array_reduce($a,'product',10));//1200  10*1*2*3*4*5
+print_r(array_reduce($x,'sum','no data to reduce'));//no data to reduce
+</pre>
 
+* bool array_walk(array &$array,callable $callback[,mixed $userdata=null])使用用户自定义函数对数组中的每个元素做回调处理
+<pre>
+$fruit=array('d'=>'lemon','a'=>'orange','b'=>'banana','c'=>'apple');
+function test_alter(&$item1,$key,$prefix){
+    $item1="$prefix:$item1";
+}
+function test_print($item2,$key){
+    echo "$key.$item2";
+}
+print_r(array_walk($fruit,'test_print'));//d.lemona.orangeb.bananac.apple
+array_walk($fruit,'test_alter','fruit');
+print_r(array_walk($fruit,'test_print'));//d.fruit:lemona.fruit:orangeb.fruit:bananac.fruit:apple
+</pre>
+
+## 数组中是否存在
+* bool array_key_exists(mixed $key,array $array)检查数组里是否有指定的键名key
+<pre>
+$search_array=array('first'=>1,'second'=>4);
+if(array_key_exists('first',$search_array)){
+    echo "first in the key";//first in the key
+}
+</pre>
 
