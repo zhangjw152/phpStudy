@@ -565,6 +565,11 @@ print_r(array_merge($array1,$array2));//Array ( [0] => zero_a [1] => two_a [2] =
 print_r($array1+$array2);//Array ( [0] => zero_a [2] => two_a [3] => three_a [1] => one_b [4] => four_b )
 </pre>
 
+* array array_merge_recursive(array $array1[,array $...])递归的合并一个或多个数组
+<pre>
+
+</pre>
+
 ## 数组统计
 * array array_count_values(array $array)返回一个数组，键是array里元素的值，值是array元素的值出现的次数。
 <pre>
@@ -592,7 +597,7 @@ $input=array('a'=>'green','red','b'=>'green','blue','red');
 print_r(array_unique($input));//Array ( [a] => green [0] => red [1] => blue )
 </pre>
 
-## 返回数组键名键值
+## 数组键名键值
 * array array_keys(array $array[,$search_value=null[,bool $strict=false]])返回input数组中的键名。如果指定了search_value，只返回该值的键名
 <pre>
 $array1 = array(0 => 100, 'color' => 'red');
@@ -606,6 +611,13 @@ print_r(array_keys($array2, 'blue'));//Array ( [0] => 0 [1] => 3 [2] => 4 )
 $a = array(3 => 11, 1 => 22, 2 => 33);
 $a[0] = 44;
 print_r(array_values($a));//Array ( [0] => 11 [1] => 22 [2] => 33 [3] => 44 )
+</pre>
+
+* array array_flip(array $array)交换数组中的键和名，如果同一个值出现多次，则最后一个键名将作为它的值，其他键会被丢弃。
+<pre>
+$a=array('a'=>1,'b'=>1,'c'=>2);
+print_r(array_flip($a));//Array ( [1] => b [2] => c )
+技巧：当在一个很大的数组里面，利用in_array查找值是否在数组里会变得非常慢，但是利用array_flip交换键值以后利用isset会变得更快
 </pre>
 
 ## 数组的差集
@@ -781,5 +793,25 @@ $search_array=array('first'=>1,'second'=>4);
 if(array_key_exists('first',$search_array)){
     echo "first in the key";//first in the key
 }
+</pre>
+
+* bool isset(mixed $var[,mixed $...])检测变量是否设置且不是null。
+<pre>
+$a='test';
+print_r(isset($a));//true
+unset($a);
+print_r(isset($a));//false
+当数组的值为null时，isset检测为false，array_key_exists检测为true
+$a=array('test'=>1,'hello'=>null);
+print_r(isset($a['hello']));//false
+print_r(array_key_exists('hello',$a));//true
+</pre>
+
+* bool in_array(mixed $needle,array $haystack[,bool $strict=FALSE])检查数组$haystack中是否存在某个值$needle
+<pre>
+$os=array('Mac','NT','Irix','Linux');
+if(in_array('Mac',$os)){
+    echo 'get mac';
+}//get mac
 </pre>
 
