@@ -565,9 +565,11 @@ print_r(array_merge($array1,$array2));//Array ( [0] => zero_a [1] => two_a [2] =
 print_r($array1+$array2);//Array ( [0] => zero_a [2] => two_a [3] => three_a [1] => one_b [4] => four_b )
 </pre>
 
-* array array_merge_recursive(array $array1[,array $...])递归的合并一个或多个数组
+* array array_merge_recursive(array $array1[,array $...])递归的合并一个或多个数组，数组具有相同的数组键名，后一个值将不会覆盖原来的值，而是会附加到后面
 <pre>
-
+$array1=array('color'=>array('favorite'=>'red'),5);
+$array2=array(10,'color'=>array('favorite'=>'green','blue'));
+print_r(array_merge_recursive($array1,$array2));//Array ( [color] => Array ( [favorite] => Array ( [0] => red [1] => green ) [0] => blue ) [0] => 5 [1] => 10 )
 </pre>
 
 ## 数组统计
@@ -704,6 +706,26 @@ $keys=array('foo',5,10,'bar');
 print_r(array_fill_keys($keys,'banaba'));//Array ( [foo] => banaba [5] => banaba [10] => banaba [bar] => banaba )
 </pre>
 
+* array array_pad(array $array,int $size,mixed $value),返回array的一个拷贝，并用value将其填充到size指定的长度，size为正时，填补到数组的右侧，size为负时，填补到数组的左侧。
+<pre>
+$input = array(12, 4, 7);
+print_r(array_pad($input, 5, 3));//Array ( [0] => 12 [1] => 4 [2] => 7 [3] => 3 [4] => 3 )
+print_r(array_pad($input, -7, 3));// Array ( [0] => 3 [1] => 3 [2] => 3 [3] => 3 [4] => 12 [5] => 4 [6] => 7 ) 
+print_r(array_pad($input, 2, 3));//Array ( [0] => 12 [1] => 4 [2] => 7 )
+//当数组的键值为数字时会重新排序
+$input = array(56 => 'foo', 43 => 'tr');
+print_r(array_pad($input, 5, 'de'));//Array ( [0] => foo [1] => tr [2] => de [3] => de [4] => de ) 
+</pre>
+
+* array range(mixed $start,mixed $end[,number $step=1])创建一个指定范围单元的数组
+<pre>
+print_r(range(1,6));
+print_r(range(6,1));
+print_r(range(1,6,2));//Array ( [0] => 1 [1] => 3 [2] => 5 )
+print_r(range('a','e'));
+print_r(range('e','a'));
+</pre>
+
 ## 数组回调
 * array array_filter(array $array[,callable $callback[,int $flag=0]])用回调函数过滤数组中的单元，依次将数组中的每个值传递给callback函数，如果callback函数返回true，则数组当前值包含在返回数组中
 <pre>
@@ -814,4 +836,17 @@ if(in_array('Mac',$os)){
     echo 'get mac';
 }//get mac
 </pre>
+
+## 数组排序
+* bool sort(array &$srray[,int $sortflags=SORT_REGULAR])对数组进行从低到高排序
+<pre>
+$fruits = array('lemon', 'orange', 'banana', 'apple');
+sort($fruits);
+print_r($fruits);//Array ( [0] => apple [1] => banana [2] => lemon [3] => orange )
+
+$fruits=array('Orange1','orange20','ORange4','orange12');
+sort($fruits,SORT_NATURAL|SORT_FLAG_CASE);
+print_r($fruits);//Array ( [0] => Orange1 [1] => ORange4 [2] => orange12 [3] => orange20 )
+</pre>
+
 
