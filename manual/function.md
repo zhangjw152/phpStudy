@@ -509,6 +509,25 @@ print_r(array_slice($input_array,2,-1));//Array ( [0] => c [1] => d [2] => e [3]
 print_r(array_slice($input_array,2,-1,true));//Array ( [2] => c [3] => d [4] => e [5] => f )
 </pre>
 
+* array array_aplice(array &$input,int $offset,[,int length=count(input)[,mixed $replacement=array]])把input数组中由offset和length指定的单元去掉，并用replacements元素替代
+<pre>
+$input = array('red', 'green', 'blue', 'yellow');
+array_splice($input, 2);
+print_r($input);//Array ( [0] => red [1] => green )
+$input = array('red', 'green', 'blue', 'yellow');
+array_splice($input, 1, -1);
+print_r($input);//Array ( [0] => red [1] => yellow )
+$input = array('red', 'green', 'blue', 'yellow');
+array_splice($input, 1, count($input), 'orange');
+print_r($input);//Array ( [0] => red [1] => orange )
+$input = array('red', 'green', 'blue', 'yellow');
+array_splice($input, -1, 1, array('black', 'maroon'));
+print_r($input);//Array ( [0] => red [1] => green [2] => blue [3] => black [4] => maroon )
+$input = array('red', 'green', 'blue', 'yellow');
+array_splice($input, 3, 0, 'purple');
+print_r($input);//Array ( [0] => red [1] => green [2] => blue [3] => purple [4] => yellow )
+</pre>
+
 * array array_column(array $input,mixed $column_key[,mixed $index_key=null])返回$input数组中键值为column_key的列,并用index_key作为键值
 <pre>
 $records = array(
@@ -620,6 +639,13 @@ print_r(array_values($a));//Array ( [0] => 11 [1] => 22 [2] => 33 [3] => 44 )
 $a=array('a'=>1,'b'=>1,'c'=>2);
 print_r(array_flip($a));//Array ( [1] => b [2] => c )
 技巧：当在一个很大的数组里面，利用in_array查找值是否在数组里会变得非常慢，但是利用array_flip交换键值以后利用isset会变得更快
+</pre>
+
+* array array_reverse(array $array[,bool $preserve_keys=false])返回单元顺序相反的数组,如果preserve_keys为true会保留数字的键
+<pre>
+$input=array('php',4,array('green','red'));
+print_r(array_reverse($input));//Array ( [0] => Array ( [0] => green [1] => red ) [1] => 4 [2] => php )
+print_r(array_reverse($input,true));//Array ( [2] => Array ( [0] => green [1] => red ) [1] => 4 [0] => php )ƒ
 </pre>
 
 ## 数组的差集
@@ -837,6 +863,16 @@ if(in_array('Mac',$os)){
 }//get mac
 </pre>
 
+* array_search(mixed $needle,array $haystack[,bool $strict=false])在数组中搜索给定的值，如果成功则返回相应的键名
+<pre>
+$base=array('orange','banana','apple','raspberry');
+print_r(array_search('apple',$base));//2
+//多维数组的查找
+$user = array(0 => array('uid' => '100', 'name' => 'Sandra', 'url' => 'urlof100'), 1 => array('uid' => '5465', 'name' => 'Stefanie', 'url' => 'urlof100'), 2 => array('uid' => '40489', 'name' => 'Michael', 'url' => 'urlof40489'));
+$key=array_search(40489,array_column($user,'uid'));
+print_r($key);//2
+</pre>
+
 ## 数组排序
 * bool sort(array &$srray[,int $sortflags=SORT_REGULAR])对数组进行从低到高排序，数组的键值会重新索引
 <pre>
@@ -990,3 +1026,149 @@ shuffle($num);
 print_r($num);//Array ( [0] => 4 [1] => 8 [2] => 12 [3] => 5 [4] => 11 [5] => 13 [6] => 18 [7] => 1 [8] => 17 [9] => 16 [10] => 2 [11] => 15 [12] => 7 [13] => 10 [14] => 6 [15] => 3 [16] => 19 [17] => 9 [18] => 14 )
 </pre>
 
+## 数组移入移出
+* int array_push(array &$array,mixed,$value1[,mixed $...])将一个或多个单元压入数组的末尾
+<pre>
+$stack = array("orange", "banana");
+array_push($stack, "apple", "raspberry");
+print_r($stack);//Array ( [0] => orange [1] => banana [2] => apple [3] => raspberry )
+// array_push() 等同于 $array[] =，但是$array[]=的效率更高
+</pre>
+
+* mixed array_pop(array &$array)弹出并返回array数组的最后一个单元，并将数组的长度减一
+<pre>
+$stack=array('orange','banana','apple','raspberry');
+$fruit=array_pop($stack);
+print_r($stack);//Array ( [0] => orange [1] => banana [2] => apple ) 
+print_r($fruit);//raspberry
+</pre>
+
+* mixed array_shift(array &$shift)将数组的第一个单元移出并作为结果返回
+<pre>
+$stack=array('orange','banana','apple','raspberry');
+$fruit=array_shift($stack);
+print_r($stack);//Array ( [0] => banana [1] => apple [2] => raspberry ) 
+print_r($fruit);//orange
+</pre>
+
+* mixed array_unshift(array &$array,mixed $value1[,mixed $...])将传入的单元插入到array数组的开头
+<pre>
+$queue = array("orange", "banana");
+array_unshift($queue, "apple", "raspberry");
+print_r($queue);//Array ( [0] => apple [1] => raspberry [2] => orange [3] => banana )
+</pre>
+
+## 数组计算
+*number array_sum(array $array)计算数组中所有值得和
+<pre>
+$a = array(2, 4, 6, 8);
+print_r(array_sum($a));//20
+</pre>
+
+* number array_product(array $array)计算数组中所有值得乘积
+<pre>
+$a = array(2, 4, 6, 8);
+print_r(array_product($a));//384
+</pre>
+
+## 数组替换
+* array array_replace(array $array1,array $array2[,array $...])使用传递的数组替换第一个数组的元素,如果一个键同时存在于第一个第二个数组，将被替换，如果存在于第二个数组，但不存在于第一个数组，将在第一个数组创建这个元素
+<pre>
+$base=array('orange','banana','apple','raspberry');
+$replacements=array(0=>'pineapple',4=>'cherry');
+$replacements2=array(0=>'grape');
+$basket=array_replace($base,$replacements,$replacements2);
+print_r($basket);//Array ( [0] => grape [1] => banana [2] => apple [3] => raspberry [4] => cherry )
+</pre>
+
+* array array_replace_recursive(array $array1,array $array2[,array $...])使用传递的数组递归替换第一个数组的元素,将遍历数组，并将相同的处理应用到数组的内部值
+<pre>
+$base=array('citrus'=>array('orange'),'berries'=>array('blackberry','raspberry'));
+$replacements=array('citrus'=>array('pineapple'),'berries'=>array('blueberry'));
+print_r(array_replace($base,$replacements));//Array ( [citrus] => Array ( [0] => pineapple ) [berries] => Array ( [0] => blueberry ) )
+print_r(array_replace_recursive($base,$replacements));//Array ( [citrus] => Array ( [0] => pineapple ) [berries] => Array ( [0] => blueberry [1] => raspberry ) )
+</pre>
+
+## 数组创建和提取
+* array compact(mixed $varname1[,mixed $...])建立一个数组，包括变量名和他们的值
+<pre>
+$city  = "San Francisco";
+$state = "CA";
+$event = "SIGGRAPH";
+print_r(compact('city','nothing','state','event'));//Array ( [city] => San Francisco [state] => CA [event] => SIGGRAPH )
+</pre>
+
+* int extract(array &$array[,int flag=EXTR_OVERWRITE[,string $prefix=NULL]])将数组从变量导入到当前的符号表
+<pre>
+$size = "large";
+$var_array = array("color" => "blue",
+    "size"  => "medium",
+    "shape" => "sphere");
+extract($var_array, EXTR_PREFIX_SAME, "wddx");
+
+echo "$color, $size, $shape, $wddx_size\n";//blue, large, sphere, medium
+//$size 没有被覆盖，因为指定了 EXTR_PREFIX_SAME，这使得 $wddx_size 被建立
+</pre>
+
+* array list(mixed $val1[,mixed $...])把数组中的值赋给一组变量
+<pre>
+$info = array('coffee', 'brown', 'caffeine');
+list($a[0], $a[1], $a[2]) = $info;
+print_r($a);//Array ( [2] => caffeine [1] => brown [0] => coffee )
+</pre>
+
+## 数组的指针位置
+* mixed current(array &$array)返回数组的当前单元
+<pre>
+$transport=array('foot','bike','car','train');
+print_r(current($transport));//foot
+</pre>
+
+* mixed next(array &$array)将数组中的内部指针向前移动一位，并返回下一个数组的单元值
+<pre>
+$transport=array('foot','bike','car','train');
+print_r(current($transport));//foot
+print_r(next($transport));//bike
+print_r(current($transport));//bike
+</pre>
+
+* mixed prev(array &$array)将数组的内部指针倒回一位，并返回当前值
+<pre>
+$transport=array('foot','bike','car','train');
+print_r(current($transport));//foot
+print_r(next($transport));//bike
+print_r(current($transport));//bike
+print_r(prev($transport));//foot
+</pre>
+
+* mixed end(array &$array)将数组内部的指针指向最后一个单元
+<pre>
+$transport=array('foot','bike','car','train');
+print_r(current($transport));//foot
+print_r(next($transport));//bike
+print_r(current($transport));//bike
+print_r(prev($transport));//foot
+print_r(end($transport));//train
+</pre>
+
+* mixed reset(array &$array)将数组内部的指针指向第一个单元
+<pre>
+$transport=array('foot','bike','car','train');
+print_r(current($transport));//foot
+print_r(next($transport));//bike
+print_r(current($transport));//bike
+print_r(prev($transport));//foot
+print_r(end($transport));//train
+print_r(reset($transport));//foot
+</pre>
+
+* mixed each(array &$array)返回当前的键/值并将数组指针向前移动一步
+<pre>
+$fruit = array('a' => 'apple', 'b' => 'banana', 'c' => 'cranberry');
+print_r(each($fruit));//Array ( [1] => apple [value] => apple [0] => a [key] => a )
+//each() 经常和 list() 结合使用来遍历数组
+$fruit = array('a' => 'apple', 'b' => 'banana', 'c' => 'cranberry');
+while (list($key,$value)=each($fruit)){
+    echo "$key=>$value";
+}
+</pre>
