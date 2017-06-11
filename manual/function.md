@@ -983,5 +983,10 @@ natcasesort($array);
 print_r($array);//Array ( [0] => IMG0.png [4] => img1.png [3] => img2.png [5] => IMG3.png [2] => img10.png [1] => img12.png )
 </pre>
 
-
+* bool shuffle ( array &$array )随机打乱数组
+<pre>
+$num=range(1,19);
+shuffle($num);
+print_r($num);//Array ( [0] => 4 [1] => 8 [2] => 12 [3] => 5 [4] => 11 [5] => 13 [6] => 18 [7] => 1 [8] => 17 [9] => 16 [10] => 2 [11] => 15 [12] => 7 [13] => 10 [14] => 6 [15] => 3 [16] => 19 [17] => 9 [18] => 14 )
+</pre>
 
