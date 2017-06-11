@@ -838,7 +838,7 @@ if(in_array('Mac',$os)){
 </pre>
 
 ## 数组排序
-* bool sort(array &$srray[,int $sortflags=SORT_REGULAR])对数组进行从低到高排序
+* bool sort(array &$srray[,int $sortflags=SORT_REGULAR])对数组进行从低到高排序，数组的键值会重新索引
 <pre>
 $fruits = array('lemon', 'orange', 'banana', 'apple');
 sort($fruits);
@@ -848,5 +848,140 @@ $fruits=array('Orange1','orange20','ORange4','orange12');
 sort($fruits,SORT_NATURAL|SORT_FLAG_CASE);
 print_r($fruits);//Array ( [0] => Orange1 [1] => ORange4 [2] => orange12 [3] => orange20 )
 </pre>
+
+* bool asort(array &$array[,int $sort_flags=SORT_REGULAR])对数组进行排序并保持索引关系不变
+<pre>
+//asort会保持索引不变
+$fruits=array('d'=>'lemon','a'=>'orange','b'=>'banana','c'=>'apple');
+asort($fruits);
+print_r($fruits);//Array ( [c] => apple [b] => banana [d] => lemon [a] => orange ) 
+//sort会重新索引
+$fruits=array('d'=>'lemon','a'=>'orange','b'=>'banana','c'=>'apple');
+sort($fruits);
+print_r($fruits);//Array ( [0] => apple [1] => banana [2] => lemon [3] => orange )
+</pre>
+
+* bool ksort(array &$array[,int $sort_flags=SORT_REGULAR])对数组按照键名排序
+<pre>
+$fruits=array('d'=>'lemon','a'=>'orange','b'=>'banana','c'=>'apple');
+ksort($fruits);
+print_r($fruits);//Array ( [a] => orange [b] => banana [c] => apple [d] => lemon )
+</pre>
+
+* bool usort(array &$array,callable $value_compare_func)使用用户自定义的比较函数对数组中的值进行由低到高排序
+<pre>
+function cmp($a, $b)
+{
+    if (abs($a) == abs($b)) {
+        return 0;
+    }
+    elseif (abs($a)>abs($b)){
+        return 1;
+    }elseif (abs($a)<abs($b)){
+        return -1;
+    }
+}
+$array=array(23,-43,2,1,24);
+usort($array,'cmp');
+print_r($array);//Array ( [0] => 1 [1] => 2 [2] => 23 [3] => 24 [4] => -43 )
+</pre>
+
+* uasort(array &$array，cllable $value_compare_func)使用用户自定义的比较函数对数组的值进行排序并保持索引关联
+<pre>
+function cmp($a, $b)
+{
+    if (abs($a) == abs($b)) {
+        return 0;
+    } elseif (abs($a) > abs($b)) {
+        return 1;
+    } elseif (abs($a) < abs($b)) {
+        return -1;
+    }
+}
+
+$array = array('a' => 4, 'b' => 8, 'c' => -1, 'd' => -9, 'e' => 2, 'f' => 5, 'g' => 3, 'h' => -4);
+uasort($array,'cmp');
+print_r($array);//Array ( [c] => -1 [e] => 2 [g] => 3 [a] => 4 [h] => -4 [f] => 5 [b] => 8 [d] => -9 )
+</pre>
+
+* bool uksort(array &$array,callable $key_cmp_func)使用用户自定义的比较函数对数组中的键名进行排序
+<pre>
+function cmp($a, $b)
+{
+    $a = preg_replace('@^(a|an|the) @', '', $a);
+    $b = preg_replace('@^(a|an|the) @', '', $b);
+    return strcasecmp($a, $b);
+}
+
+$a = array("John" => 1, "the Earth" => 2, "an apple" => 3, "a banana" => 4);
+
+uksort($a, "cmp");
+print_r($a);//Array ( [an apple] => 3 [a banana] => 4 [the Earth] => 2 [John] => 1 )
+</pre>
+
+* bool rsort(array &$array[,int sort_flgs=SORT_REGULAR])对数组进行由高到低的逆向排序
+<pre>
+$fruits = array('lemon', 'orange', 'banana', 'apple');
+rsort($fruits);
+print_r($fruits);//Array ( [0] => orange [1] => lemon [2] => banana [3] => apple )
+</pre>
+
+* bool arsort(array &$array[,int sort_flgs=SORT_REGULAR])对数组进行逆向排序，并保持索引
+<pre>
+$fruits = array("d" => "lemon", "a" => "orange", "b" => "banana", "c" => "apple");
+arsort($fruits);
+print_r($fruits);//Array ( [a] => orange [d] => lemon [b] => banana [c] => apple )
+</pre>
+
+* bool krsort(array &$array[,int sort_flags=SORT_REGULAR])对数组按照键名逆向排序
+<pre>
+$fruits = array("d" => "lemon", "a" => "orange", "b" => "banana", "c" => "apple");
+krsort($fruits);
+print_r($fruits);//Array ( [d] => lemon [c] => apple [b] => banana [a] => orange )
+</pre>
+
+* bool array_multisort(array &$array1,[,mixed $array_sort_order=SORT_ASC[,mixed $array_sort_order=SORT_REGULAR[,mixed $...]]])用来一次对多个数组进行排序，或者根据某一维或者多位数组进行排序
+<pre>
+//多个数组排序，排序后第二个数组的项目对应第一个数组的项目进行排序
+$ar1 = array(10, 100, 100, 0);
+$ar2 = array(1, 3, 2, 4);
+array_multisort($ar1, $ar2);
+print_r($ar1);//Array ( [0] => 0 [1] => 10 [2] => 100 [3] => 100 )
+print_r($ar2);//Array ( [0] => 4 [1] => 1 [2] => 2 [3] => 3 )
+//排序多维数组
+$data[] = array('volume' => 67, 'edition' => 2);
+$data[] = array('volume' => 86, 'edition' => 1);
+$data[] = array('volume' => 85, 'edition' => 6);
+$data[] = array('volume' => 98, 'edition' => 2);
+$data[] = array('volume' => 86, 'edition' => 6);
+$data[] = array('volume' => 67, 'edition' => 7);
+foreach ($data as $key => $row) {
+    $volume[$key]  = $row['volume'];
+    $edition[$key] = $row['edition'];
+}
+array_multisort($volume,SORT_ASC,$edition,SORT_DESC,$data);
+print_r($data);//Array ( [0] => Array ( [volume] => 67 [edition] => 7 ) [1] => Array ( [volume] => 67 [edition] => 2 ) [2] => Array ( [volume] => 85 [edition] => 6 ) [3] => Array ( [volume] => 86 [edition] => 6 ) [4] => Array ( [volume] => 86 [edition] => 1 ) [5] => Array ( [volume] => 98 [edition] => 2 ) )
+</pre>
+
+* bool natsort(array &$array)用自然排序法对字符串数组进行排序
+<pre>
+$array1 = $array2 = array("img12.png", "img10.png", "img2.png", "img1.png");
+
+asort($array1);
+echo "Standard sorting\n";
+print_r($array1);//Standard sorting Array ( [3] => img1.png [1] => img10.png [0] => img12.png [2] => img2.png )
+
+natsort($array2);
+echo "\nNatural order sorting\n";
+print_r($array2);//Natural order sorting Array ( [3] => img1.png [2] => img2.png [1] => img10.png [0] => img12.png )
+</pre>
+
+* bool natcasesort ( array &$array )不区分大小写利用自然排序法对字符串数组进行排序
+<pre>
+$array= array('IMG0.png', 'img12.png', 'img10.png', 'img2.png', 'img1.png', 'IMG3.png');
+natcasesort($array);
+print_r($array);//Array ( [0] => IMG0.png [4] => img1.png [3] => img2.png [5] => IMG3.png [2] => img10.png [1] => img12.png )
+</pre>
+
 
 
